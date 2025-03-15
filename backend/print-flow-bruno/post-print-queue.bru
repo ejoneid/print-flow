@@ -1,0 +1,18 @@
+meta {
+  name: post-print-queue
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/print-queue
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "test",
+    "url": "testUrl"
+  }
+}

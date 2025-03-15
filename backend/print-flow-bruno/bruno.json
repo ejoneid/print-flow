@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "print-flow",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
