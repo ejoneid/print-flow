@@ -1,6 +1,6 @@
 import {serve} from "bun";
 import {getPrintQueue, postPrintQueue} from "./src/routes/print-queue.ts";
-import {withLogging} from "./utils/logginUtils.ts";
+import {withLogging} from "./src/utils/logginUtils.ts";
 import {getMigrations, migrate} from "bun-sqlite-migrations";
 import {db} from "./src/db.ts";
 
