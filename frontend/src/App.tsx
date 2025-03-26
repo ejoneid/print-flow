@@ -1,16 +1,38 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import {signOut, useSessionContext} from "supertokens-auth-react/recipe/session"
+import {useNavigate} from "react-router";
+import {useQuery} from "@tanstack/react-query";
 
 function App() {
   const [count, setCount] = useState(0)
+  const session = useSessionContext();
+  const navigate = useNavigate();
+  const {data} = useQuery({
+      queryKey: ['queue'],
+      queryFn: () => fetch('http://localhost:3000/api/print-queue').then(res => res.json())
+  })
+
+    console.log(data);
+
+  const logout = async () => {
+    await signOut();
+    navigate('/login');
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+        {!session.loading && (
+            <>
+                <p>Logged in as <b>{session.userId}</b></p>
+                <button onClick={logout}>Sign out</button>
+            </>
+        )}
+        <div>
+            <a href="https://vite.dev" target="_blank">
+                <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
