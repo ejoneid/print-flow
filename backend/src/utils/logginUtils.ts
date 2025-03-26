@@ -1,8 +1,6 @@
 
-// Define handler type
-type RequestHandler = (req: Request) => Response | Promise<Response>;
+export type RequestHandler = (req: Request) => Response | Promise<Response>;
 
-// Middleware function to add logging with TypeScript types
 export const withLogging = (handler: RequestHandler): RequestHandler => {
     return async (req: Request): Promise<Response> => {
         const timestamp = new Date().toISOString();
