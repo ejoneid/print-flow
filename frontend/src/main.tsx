@@ -12,29 +12,45 @@ import ThirdParty, {Google} from "supertokens-auth-react/recipe/thirdparty";
 import {ThirdPartyPreBuiltUI} from 'supertokens-auth-react/recipe/thirdparty/prebuiltui';
 import {QueryClientProvider} from "@tanstack/react-query";
 import {queryClient} from "./queryClient.ts";
+import * as process from "node:process";
+import {ReactNode} from "react";
 
-SuperTokens.init({
-    appInfo: {
-        appName: "Print flow",
-        apiDomain: import.meta.env.VITE_API_DOMAIN,
-        websiteDomain: import.meta.env.VITE_WEBSITE_DOMAIN,
-        apiBasePath: "/auth",
-        websiteBasePath: "/login",
-    },
-    recipeList: [
-        EmailPassword.init(),
-        Session.init(),
-        ThirdParty.init({
-            signInAndUpFeature: {
-                providers: [
-                    Google.init()
-                ],
-            },
-        })
-    ],
-});
+// if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
+    SuperTokens.init({
+        appInfo: {
+            appName: "Print flow",
+            apiDomain: import.meta.env.VITE_API_DOMAIN,
+            websiteDomain: import.meta.env.VITE_WEBSITE_DOMAIN,
+            apiBasePath: "/auth",
+            websiteBasePath: "/login",
+        },
+        recipeList: [
+            EmailPassword.init(),
+            Session.init({
+                override: {
+                    functions: (originalImplementation) => {
+                        return {
+                            ...originalImplementation,
+                            getUserId: async (context) => {
+                                const storedUserUuid = localStorage.getItem("x-print-flow-user-uuid");
+                                return storedUserUuid ?? "defaultTestUserUuid";
+                            }
+                        }
+                    }
+                }
+            }),
+            ThirdParty.init({
+                signInAndUpFeature: {
+                    providers: [
+                        Google.init()
+                    ],
+                },
+            })
+        ],
+    });
+// }
 
-createRoot(document.getElementById('root')!).render(
+const AppWithAuth = () => (
     <SuperTokensWrapper>
         <QueryClientProvider client={queryClient} >
             <BrowserRouter>
@@ -44,5 +60,23 @@ createRoot(document.getElementById('root')!).render(
                 </Routes>
             </BrowserRouter>
         </QueryClientProvider>
-    </SuperTokensWrapper>,
+    </SuperTokensWrapper>
+);
+
+const AppWithoutAuth = () => (
+    <SuperTokensWrapper>
+    <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<App/>}/>
+            </Routes>
+        </BrowserRouter>
+    </QueryClientProvider>
+    </SuperTokensWrapper>
+);
+
+const AppToRender: ReactNode = import.meta.env.VITE_OVERRIDE_AUTH === "true" ? AppWithoutAuth : AppWithAuth;
+
+createRoot(document.getElementById('root')!).render(
+    <AppWithAuth/>
 )

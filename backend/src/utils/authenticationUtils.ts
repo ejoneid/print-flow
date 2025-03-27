@@ -2,8 +2,21 @@ import type {RequestHandler} from "./logginUtils.ts";
 import JsonWebToken from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
 
-export const withAuthentication = (handler: RequestHandler): RequestHandler => {
+export type AuthDetails = {
+    userUuid: string;
+}
+
+type AuthenticatedRequestHandler = (req: Request, authDetails: AuthDetails) => Response | Promise<Response>;
+
+export const withAuthentication = (handler: AuthenticatedRequestHandler): RequestHandler => {
     return async (req: Request): Promise<Response> => {
+
+        if (process.env.ALLOW_AUTH_OVERRIDE === "true") {
+            const overrideUserUuid = req.headers.get("x-user-uuid");
+            if (!overrideUserUuid) return Unauthorized("No x-user-uuid header");
+            return handler(req, {userUuid: overrideUserUuid});
+        }
+
         const cookieString = req.headers.get("cookie");
         if (!cookieString) return Unauthorized("No cookie header");
 
@@ -25,7 +38,12 @@ export const withAuthentication = (handler: RequestHandler): RequestHandler => {
             });
         }
 
-        return handler(req);
+        const decodedJwt = JsonWebToken.decode(jwt);
+        const authDetails: AuthDetails = {
+            userUuid: decodedJwt.sub as string,
+        };
+
+        return handler(req, authDetails);
     };
 };
 

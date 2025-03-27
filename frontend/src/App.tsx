@@ -12,7 +12,11 @@ function App() {
   const navigate = useNavigate();
   const {data} = useQuery({
       queryKey: ['queue'],
-      queryFn: () => fetch('http://localhost:3000/api/print-queue').then(res => res.json())
+      queryFn: () => fetch('/api/print-queue', {
+          headers: {
+              'x-user-uuid': "test"
+          }
+      }).then(res => res.json()),
   })
 
     console.log(data);
