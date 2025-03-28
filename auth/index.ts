@@ -8,7 +8,7 @@ import { errorHandler, middleware } from "supertokens-node/framework/express";
 import onFinished from "on-finished";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 
-const port = 8000;
+const port = process.env.PORT ?? 8000;
 
 supertokens.init({
   framework: "express",
