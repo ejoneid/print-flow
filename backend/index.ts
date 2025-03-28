@@ -6,7 +6,7 @@ import { db } from "./src/db.ts";
 import { withAuthentication } from "./src/utils/authenticationUtils.ts";
 import { getUser } from "./src/routes/user.ts";
 
-const port = 3001;
+const port = process.env.PORT ?? 3001;
 
 migrate(db, getMigrations("./migrations"));
 

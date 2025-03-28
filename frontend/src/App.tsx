@@ -35,10 +35,12 @@ function App() {
           <p>
             Logged in as <b>{user.userUuid}</b>
           </p>
-          <button type="button" onClick={logout}>Sign out</button>
+          <button type="button" onClick={logout}>
+            Sign out
+          </button>
         </>
       )}
-      <UserSwitcher />
+      {import.meta.env.VITE_OVERRIDE_AUTH === "true" && <UserSwitcher />}
       <div>
         <a href="https://vite.dev" target="_blank" rel="noreferrer">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -49,7 +51,9 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>count is {count}</button>
+        <button type="button" onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

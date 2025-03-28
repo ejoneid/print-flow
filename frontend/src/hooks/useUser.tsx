@@ -18,7 +18,7 @@ export const UserContextProvider = ({ children }: { children: string | ReactElem
     queryFn: () =>
       fetch("/api/user", {
         headers: requestHeaders,
-      }).then((res) => res.json<PrintFlowUser>()),
+      }).then((res) => res.json()),
   });
   console.log(data);
 

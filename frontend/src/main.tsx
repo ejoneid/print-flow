@@ -18,8 +18,8 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
     appInfo: {
       appName: "Print flow",
-      apiDomain: import.meta.env.VITE_API_DOMAIN,
-      websiteDomain: import.meta.env.VITE_WEBSITE_DOMAIN,
+      apiDomain: window.location.origin,
+      websiteDomain: window.location.origin,
       apiBasePath: "/auth",
       websiteBasePath: "/login",
     },
@@ -30,7 +30,7 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
           functions: (originalImplementation) => {
             return {
               ...originalImplementation,
-              getUserId: async (context) => {
+              getUserId: async (_) => {
                 const storedUserUuid = localStorage.getItem("x-print-flow-user-uuid");
                 return storedUserUuid ?? "defaultTestUserUuid";
               },

@@ -1,0 +1,28 @@
+
+services:
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - SUPERTOKENS_CONNECTION_URI=${SUPERTOKENS_CONNECTION_URI}
+      - SUPERTOKENS_API_KEY=${SUPERTOKENS_API_KEY}
+      - API_DOMAIN=${API_DOMAIN}
+      - WEBSITE_DOMAIN=${WEBSITE_DOMAIN}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - PORT=80
+      - JWKS_URI=https://auth:80/auth/jwt/jwks.json
+      - ALLOW_AUTH_OVERRIDE=false
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
