@@ -18,5 +18,5 @@ COPY . .
 
 # run the app
 USER bun
-EXPOSE 8000
+EXPOSE 80
 ENTRYPOINT [ "bun", "run", "index.ts" ]

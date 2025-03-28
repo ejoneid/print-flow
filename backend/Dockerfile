@@ -17,6 +17,5 @@ COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
 
 # run the app
-USER bun
-EXPOSE 3001
+EXPOSE 80
 ENTRYPOINT [ "bun", "run", "index.ts" ]
