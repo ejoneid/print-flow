@@ -1,12 +1,13 @@
+import cors from "cors";
+import express from "express";
+import onFinished from "on-finished";
 import supertokens from "supertokens-node";
-import Session from "supertokens-node/recipe/session";
+import { errorHandler, middleware } from "supertokens-node/framework/express";
 import Dashboard from "supertokens-node/recipe/dashboard";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
-import express from "express";
-import cors from "cors";
-import { errorHandler, middleware } from "supertokens-node/framework/express";
-import onFinished from "on-finished";
+import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
+import UserRoles from "supertokens-node/recipe/userroles";
 
 const port = process.env.PORT ?? 8000;
 
@@ -43,9 +44,8 @@ supertokens.init({
         ],
       },
     }),
-    Session.init({
-      exposeAccessTokenToFrontendInCookieBasedAuth: true,
-    }),
+    UserRoles.init(),
+    Session.init(),
     Dashboard.init(),
   ],
 });

@@ -3,7 +3,7 @@ import { getPrintQueue, postPrintQueue } from "./src/routes/print-queue.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
 import { getMigrations, migrate } from "bun-sqlite-migrations";
 import { db } from "./src/db.ts";
-import { withAuthentication } from "./src/utils/authenticationUtils.ts";
+import { withAuthentication } from "./src/auth/authenticationUtils.ts";
 import { getUser } from "./src/routes/user.ts";
 
 const port = process.env.PORT ?? 3001;
