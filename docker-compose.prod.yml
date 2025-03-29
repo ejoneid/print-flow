@@ -17,8 +17,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    volumes:
+      - print-flow-backend-sqlite:/usr/src/app/data
     environment:
       - PORT=80
+      - DB_LOCATION=data/print-flow.sqlite
       - JWKS_URI=https://auth:80/auth/jwt/jwks.json
       - ALLOW_AUTH_OVERRIDE=false
 
