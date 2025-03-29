@@ -38,6 +38,7 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
           },
         },
       }),
+      Session.init(),
       ThirdParty.init({
         signInAndUpFeature: {
           providers: [Google.init()],
