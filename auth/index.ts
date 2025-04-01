@@ -44,8 +44,9 @@ supertokens.init({
         ],
       },
     }),
-    UserRoles.init(),
-    Session.init(),
+    Session.init({
+      exposeAccessTokenToFrontendInCookieBasedAuth: true,
+    }),
     Dashboard.init(),
   ],
 });

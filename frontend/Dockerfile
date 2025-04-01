@@ -15,9 +15,9 @@ RUN cd /temp/prod && bun run build
 # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=build /temp/prod/dist dist
-COPY server.ts server.ts
+RUN bun install -g serve
 
 # run the app
 USER bun
 EXPOSE 80
-CMD [ "bun", "server.ts" ]
+CMD [ "bunx", "serve", "-p", "80", "-s", "dist" ]
