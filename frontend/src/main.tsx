@@ -25,19 +25,6 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
     },
     recipeList: [
       EmailPassword.init(),
-      Session.init({
-        override: {
-          functions: (originalImplementation) => {
-            return {
-              ...originalImplementation,
-              getUserId: async (_) => {
-                const storedUserUuid = localStorage.getItem("x-print-flow-user-uuid");
-                return storedUserUuid ?? "defaultTestUserUuid";
-              },
-            };
-          },
-        },
-      }),
       Session.init(),
       ThirdParty.init({
         signInAndUpFeature: {
