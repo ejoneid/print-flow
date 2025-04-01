@@ -4,9 +4,9 @@ serve({
     port: 80,
     async fetch(req) {
         const requestPath = new URL(req.url).pathname;
+        console.log(`${new Date().toISOString()}: serving "${requestPath}"`);
         const filePath = `dist${requestPath}`;
         const file = Bun.file(filePath);
-        console.log(`${new Date().toISOString()}: serving "${requestPath}"`);
         if (await file.exists()) {
             return new Response(file, {
                 headers: {

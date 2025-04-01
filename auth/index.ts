@@ -44,8 +44,8 @@ supertokens.init({
         ],
       },
     }),
-    UserRoles.init(),
     Session.init(),
+    UserRoles.init(),
     Dashboard.init(),
   ],
 });

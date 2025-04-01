@@ -104,6 +104,16 @@ export function Unauthorized(message: string) {
   });
 }
 
+export function Forbidden(message: string) {
+  console.log(message);
+  return new Response("Forbidden", {
+    status: 403,
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
+}
+
 const client = jwksClient({
   jwksUri: process.env.JWKS_URI,
 });
