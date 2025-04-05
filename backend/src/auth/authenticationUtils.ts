@@ -2,6 +2,7 @@ import type { RequestHandler } from "../utils/logginUtils.ts";
 import JsonWebToken from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { TEST_USERS } from "./testUsers.ts";
+import {logger} from "shared";
 
 const USER_ROLES = ["USER", "ADMIN"] as const;
 const USER_PERMISSIONS = ["read", "write", "request_print", "approve_print"] as const;
@@ -42,7 +43,7 @@ export const withAuthentication = (handler: AuthenticatedRequestHandler): Reques
     });
 
     if (error) {
-      console.error(error.message);
+      logger.warn(`Unauthorized: ${error.message}`);
       return new Response("Unauthorized", {
         status: 401,
         headers: {
@@ -95,7 +96,7 @@ function isUserPermission(str: string): str is UserPermissions {
 }
 
 export function Unauthorized(message: string) {
-  console.log(message);
+  logger.info(message);
   return new Response("Unauthorized", {
     status: 401,
     headers: {
@@ -105,7 +106,7 @@ export function Unauthorized(message: string) {
 }
 
 export function Forbidden(message: string) {
-  console.log(message);
+  logger.info(message);
   return new Response("Forbidden", {
     status: 403,
     headers: {

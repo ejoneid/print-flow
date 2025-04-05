@@ -2,8 +2,8 @@
 services:
   auth:
     build:
-      context: ./auth
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./auth/Dockerfile
     environment:
       - PORT=80
       - SUPERTOKENS_CONNECTION_URI=${SUPERTOKENS_CONNECTION_URI}
@@ -15,10 +15,10 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
     volumes:
-      - print-flow-backend-sqlite:/usr/src/app/data
+      - print-flow-backend-sqlite:/usr/src/app/backend/data
     environment:
       - PORT=80
       - DB_LOCATION=data/print-flow.sqlite
@@ -27,5 +27,5 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/Dockerfile

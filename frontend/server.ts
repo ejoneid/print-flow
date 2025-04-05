@@ -1,10 +1,11 @@
 import { serve } from "bun";
+import {logger} from "shared";
 
 serve({
     port: 80,
     async fetch(req) {
         const requestPath = new URL(req.url).pathname;
-        console.log(`${new Date().toISOString()}: serving "${requestPath}"`);
+        logger.info(`Serving "${requestPath}"`);
         const filePath = `dist${requestPath}`;
         const file = Bun.file(filePath);
         if (await file.exists()) {

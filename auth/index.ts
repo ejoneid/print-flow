@@ -8,6 +8,7 @@ import EmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 import UserRoles from "supertokens-node/recipe/userroles";
+import { logger } from "shared";
 
 const port = process.env.PORT ?? 8000;
 
@@ -53,6 +54,7 @@ supertokens.init({
 const app = express();
 
 app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.url} - Resolving...`);
   const startTime = Date.now();
 
   // Store original methods
@@ -73,8 +75,8 @@ app.use((req, res, next) => {
 
   onFinished(res, (err, res) => {
     const duration = Date.now() - startTime;
-    console.log(
-      `${req.method} ${req.url} - ${res.statusCode} - ${duration}ms - ${responseBody || "[No response body]"}`,
+    logger.info(
+      `${req.method} ${req.url} - ${res.statusCode} - ${duration}ms - ${responseBody ?? "[No response body.status]"}`,
     );
   });
 

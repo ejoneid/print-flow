@@ -1,7 +1,7 @@
 {
   "name": "print-flow",
   "private": true,
-  "workspaces": ["backend", "frontend"],
+  "workspaces": ["backend", "frontend", "auth", "shared"],
   "scripts": {
     "format": "biome format --write",
     "lint": "biome lint",
