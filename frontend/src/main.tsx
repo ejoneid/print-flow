@@ -3,6 +3,7 @@ import * as reactRouterDom from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
+import { Home } from "@/pages/Home.tsx";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import Session, { SessionAuth } from "supertokens-auth-react/recipe/session";
@@ -49,7 +50,9 @@ const AppWithAuth = () => (
                   <App />
                 </SessionAuth>
               }
-            />
+            >
+              <Route index element={<Home />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
@@ -62,7 +65,9 @@ const AppWithoutAuth = () => (
     <UserContextProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<App />}>
+            <Route index element={<Home />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </UserContextProvider>

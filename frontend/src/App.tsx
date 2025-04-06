@@ -1,19 +1,11 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import printFlowLogo from "/print_flow_logo.svg";
-import "./App.css";
-import { signOut } from "supertokens-auth-react/recipe/session";
-import { useNavigate } from "react-router";
-import { useQuery } from "@tanstack/react-query";
-import { UserSwitcher } from "./components/UserSwitcher.tsx";
-import { requestHeaders } from "./queryClient.ts";
-import { useUser } from "./hooks/useUser.tsx";
+import {useQuery} from "@tanstack/react-query";
+import {UserSwitcher} from "./components/UserSwitcher.tsx";
+import {requestHeaders} from "./queryClient.ts";
+import {UserMenu} from "@/components/UserMenu.tsx";
+import {Outlet} from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const navigate = useNavigate();
-  const user = useUser();
   const { data } = useQuery({
     queryKey: ["queue"],
     queryFn: () =>
@@ -24,44 +16,21 @@ function App() {
 
   console.log(data);
 
-  const logout = async () => {
-    await signOut();
-    navigate("/login");
-  };
-
   return (
-    <>
-      {!!user && (
-        <>
-          <p>
-            Logged in as <b>{user.userUuid}</b>
-          </p>
-          <button type="button" onClick={logout}>
-            Sign out
-          </button>
-        </>
-      )}
-      {import.meta.env.VITE_OVERRIDE_AUTH === "true" && <UserSwitcher />}
-      <div>
-        <img src={printFlowLogo} className="logo" alt="Print flow logo" />
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <div className="min-h-screen flex flex-col">
+      <header>
+        <div className="container mx-auto px-4 py-3 flex justify-between items-top">
+          <div className="flex gap-4 items-center">
+            <img src={printFlowLogo} className="h-20" alt="Print flow logo" />
+            <h1 className="text-5xl font-bold mb-2">Print Flow</h1>
+          </div>
+          {import.meta.env.VITE_OVERRIDE_AUTH === "true" ? <UserSwitcher /> : <UserMenu />}
+        </div>
+      </header>
+      <main className="flex-1">
+        <Outlet />
+      </main>
+    </div>
   );
 }
 

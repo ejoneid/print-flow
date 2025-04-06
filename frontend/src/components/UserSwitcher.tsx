@@ -1,8 +1,16 @@
-import { Person } from "@mui/icons-material";
-import { IconButton, ListItemText, Menu, MenuItem, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useMenu } from "../hooks/useMenu.ts";
 import { queryClient, requestHeaders, USER_UUID_HEADER } from "../queryClient.ts";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
+import { Button } from "@/components/ui/button.tsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu.tsx";
 
 type TestUser = {
   name: string;
@@ -21,8 +29,6 @@ export const testUsers: Record<string, TestUser> = {
 };
 
 export const UserSwitcher = () => {
-  const { anchorEl, handleClick, handleClose, open } = useMenu();
-
   const [user, setUser] = useState<string>(() => sessionStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid);
 
   useEffect(() => {
@@ -36,29 +42,31 @@ export const UserSwitcher = () => {
   }, [user]);
 
   return (
-    <>
-      <Tooltip title="Switch user">
-        <IconButton
-          aria-label="select user to impersonate"
-          id="user-selector-menu-button"
-          aria-controls="user-selector-menu"
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-          onClick={handleClick}
-          className="opacity-30"
-          size="small"
-        >
-          <Person />
-        </IconButton>
-      </Tooltip>
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="icon" asChild>
+                <span className="material-symbols-outlined">person</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Switch user</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </DropdownMenuTrigger>
 
-      <Menu id="user-selector-menu" anchorEl={anchorEl} open={open} onClose={handleClose} onClick={handleClose}>
-        {Object.values(testUsers).map((testUser) => (
-          <MenuItem key={testUser.uuid} onClick={() => setUser(testUser.uuid)} selected={user === testUser.uuid}>
-            <ListItemText>{testUser.name}</ListItemText>
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>Active user</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={user} onValueChange={setUser}>
+          {Object.values(testUsers).map((testUser) => (
+            <DropdownMenuRadioItem key={testUser.uuid} value={testUser.uuid}>
+              {testUser.name}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
