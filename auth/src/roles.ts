@@ -11,7 +11,7 @@ export const userRoles = {
   },
 } as const;
 
-export async function initRoles() {
+export async function inituserRoles() {
   for (const role of Object.values(userRoles)) {
     const response = await UserRoles.createNewRoleOrAddPermissions(role.name, role.permissions);
     console.log({ ...response, role });

@@ -9,7 +9,7 @@ import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 import UserRoles from "supertokens-node/recipe/userroles";
 import { logger } from "shared";
-import { initRoles } from "./src/roles.ts";
+import { inituserRoles } from "./src/roles.ts";
 
 const port = process.env.PORT ?? 8000;
 
@@ -95,6 +95,6 @@ app.use(middleware());
 app.use(errorHandler());
 
 app.listen(port, async () => {
-  await initRoles();
+  await inituserRoles();
   console.log(`Listening on port ${port}...`);
 });

@@ -3,11 +3,14 @@
   "private": true,
   "workspaces": ["backend", "frontend", "auth", "shared"],
   "scripts": {
+    "dev": "concurrently -n 'backend,frontend' -c '#007755,#550077' 'cd backend && bun index.ts' 'cd frontend && bun run dev'",
+    "dev:auth": "concurrently -n 'backend,auth,frontend' -c '#007755,#2f6da3,#550077' 'cd backend && bun run dev:auth' 'cd auth && bun dev' 'cd frontend && bun run dev:auth'",
     "format": "biome format --write",
     "lint": "biome lint",
     "lint:fix": "biome lint --write"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4"
+    "@biomejs/biome": "1.9.4",
+    "concurrently": "9.1.2"
   }
 }

@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run index.ts"
+    "dev": "bun index.ts",
+    "dev:auth": "ALLOW_AUTH_OVERRIDE=false bun dev"
   },
   "dependencies": {
     "jsonwebtoken": "9.0.2",

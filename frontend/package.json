@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bunx --bun vite",
+    "dev:auth": "VITE_OVERRIDE_AUTH=false bun dev",
     "build": "tsc -b && bunx --bun vite build",
     "preview": "bunx --bun vite preview"
   },

@@ -3,6 +3,9 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun index.ts"
+  },
   "dependencies": {
     "supertokens-node": "21.1.0",
     "express": "4.21.2",
