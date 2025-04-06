@@ -3,7 +3,7 @@ import { randomUUIDv7 } from "bun";
 import { db } from "../db.ts";
 import { z } from "zod";
 import type { AuthDetails } from "../auth/authenticationUtils.ts";
-import {Forbidden} from "../auth/authenticationUtils.ts";
+import { Forbidden } from "../auth/authenticationUtils.ts";
 
 export function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Response {
   if (!authDetails.permissions.has("read")) {

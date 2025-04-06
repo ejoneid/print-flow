@@ -2,7 +2,7 @@ import type { RequestHandler } from "../utils/logginUtils.ts";
 import JsonWebToken from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { TEST_USERS } from "./testUsers.ts";
-import {logger} from "shared";
+import { logger } from "shared";
 
 const USER_ROLES = ["USER", "ADMIN"] as const;
 const USER_PERMISSIONS = ["read", "write", "request_print", "approve_print"] as const;

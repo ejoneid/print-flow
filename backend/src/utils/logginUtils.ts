@@ -1,4 +1,4 @@
-import {logger} from "shared";
+import { logger } from "shared";
 
 export type RequestHandler = (req: Request) => Response | Promise<Response>;
 
