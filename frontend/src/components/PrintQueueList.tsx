@@ -1,4 +1,4 @@
-import { PrintQueueItem, PrintQueueItemType } from "@/components/PrintQueueItem.tsx";
+import { PrintQueueItem, type PrintQueueItemType } from "@/components/PrintQueueItem.tsx";
 
 const mockPrintQueue: PrintQueueItemType[] = [
   {

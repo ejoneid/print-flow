@@ -3,7 +3,7 @@ import * as reactRouterDom from "react-router-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
 import App from "./App.tsx";
-import { Home } from "@/pages/Home.tsx";
+import { HomePage } from "@/pages/Home.tsx";
 import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
 import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import Session, { SessionAuth } from "supertokens-auth-react/recipe/session";
@@ -14,6 +14,8 @@ import { ThirdPartyPreBuiltUI } from "supertokens-auth-react/recipe/thirdparty/p
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./queryClient.ts";
 import { UserContextProvider } from "./hooks/useUser.tsx";
+import type { ReactNode } from "react";
+import { RequestPage } from "@/pages/Request.tsx";
 
 if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
@@ -36,45 +38,41 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
   });
 }
 
-const AppWithAuth = () => (
-  <SuperTokensWrapper>
+const ConditionalSuperTokensRoutes = () =>
+  import.meta.env.VITE_OVERRIDE_AUTH === "true"
+    ? null
+    : getSuperTokensRoutesForReactRouterDom(reactRouterDom, [ThirdPartyPreBuiltUI, EmailPasswordPreBuiltUI]);
+
+const ConditionalSuperTokensWrapper = ({ children }: { children: ReactNode }) =>
+  import.meta.env.VITE_OVERRIDE_AUTH === "true" ? children : <SuperTokensWrapper>{children}</SuperTokensWrapper>;
+
+const ConditionalSessionAuth = ({ children }: { children: ReactNode }) =>
+  import.meta.env.VITE_OVERRIDE_AUTH === "true" ? children : <SessionAuth>{children}</SessionAuth>;
+
+const Application = () => (
+  <ConditionalSuperTokensWrapper>
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
         <BrowserRouter>
           <Routes>
-            {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [ThirdPartyPreBuiltUI, EmailPasswordPreBuiltUI])}
+            {ConditionalSuperTokensRoutes()}
             <Route
               path="/"
               element={
-                <SessionAuth>
+                <ConditionalSessionAuth>
                   <App />
-                </SessionAuth>
+                </ConditionalSessionAuth>
               }
             >
-              <Route index element={<Home />} />
+              <Route index element={<HomePage />} />
+              <Route path="request" element={<RequestPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
       </UserContextProvider>
     </QueryClientProvider>
-  </SuperTokensWrapper>
+  </ConditionalSuperTokensWrapper>
 );
-
-const AppWithoutAuth = () => (
-  <QueryClientProvider client={queryClient}>
-    <UserContextProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </UserContextProvider>
-  </QueryClientProvider>
-);
-
-const AppToRender = import.meta.env.VITE_OVERRIDE_AUTH === "true" ? <AppWithoutAuth /> : <AppWithAuth />;
 
 // biome-ignore lint/style/noNonNullAssertion:
-createRoot(document.getElementById("root")!).render(AppToRender);
+createRoot(document.getElementById("root")!).render(<Application />);

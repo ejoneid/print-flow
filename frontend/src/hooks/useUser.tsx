@@ -8,8 +8,7 @@ type PrintFlowUser = {
 
 const UserContext = createContext<PrintFlowUser | null>(null);
 export const useUser = () => {
-  const user = useContext(UserContext);
-  return user;
+  return useContext(UserContext);
 };
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {

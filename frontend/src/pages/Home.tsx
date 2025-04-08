@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { PrintQueueList } from "@/components/PrintQueueList.tsx";
 
-export function Home() {
+export function HomePage() {
   return (
     <div className="container mx-auto px-4">
       <div className="mb-8">

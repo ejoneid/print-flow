@@ -8,7 +8,7 @@ import EmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 import UserRoles from "supertokens-node/recipe/userroles";
-import { logger } from "shared";
+import { logger } from "shared/node";
 import { inituserRoles } from "./src/roles.ts";
 
 const port = process.env.PORT ?? 8000;

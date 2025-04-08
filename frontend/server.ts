@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { logger } from "shared";
+import { logger } from "shared/node";
 
 serve({
   port: 80,

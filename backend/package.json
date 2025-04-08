@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "bun index.ts",
-    "dev:auth": "ALLOW_AUTH_OVERRIDE=false bun dev"
+    "dev:auth": "ALLOW_AUTH_OVERRIDE=false bun dev",
+    "tsc": "tsc"
   },
   "dependencies": {
     "jsonwebtoken": "9.0.2",

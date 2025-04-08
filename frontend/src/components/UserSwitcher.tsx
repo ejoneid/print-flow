@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { queryClient, requestHeaders, USER_UUID_HEADER } from "../queryClient.ts";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -43,17 +42,10 @@ export const UserSwitcher = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="outline" size="icon" asChild>
-                <span className="material-symbols-outlined">person</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Switch user</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <span className="material-symbols-outlined">person</span>
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>

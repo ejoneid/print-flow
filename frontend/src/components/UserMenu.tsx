@@ -1,24 +1,24 @@
-import {Avatar, AvatarFallback} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {LogOut, User} from "lucide-react";
-import {Link} from "react-router-dom";
-import {signOut} from "supertokens-auth-react/recipe/session";
-import {useNavigate} from "react-router";
+import { LogOut, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { signOut } from "supertokens-auth-react/recipe/session";
+import { useNavigate } from "react-router";
 
 export function UserMenu() {
-    const navigate = useNavigate();
-    const logout = async () => {
-        await signOut();
-        navigate("/login");
-    };
+  const navigate = useNavigate();
+  const logout = async () => {
+    await signOut();
+    navigate("/login");
+  };
 
-    return (
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="h-8 w-8 cursor-pointer">
