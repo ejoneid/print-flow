@@ -1,6 +1,7 @@
 import UserRoles from "supertokens-node/recipe/userroles";
+import type { UserPermission, UserRole } from "shared/browser";
 
-export const userRoles = {
+export const userRoles: Record<UserRole, { name: UserRole; permissions: UserPermission[] }> = {
   ADMIN: {
     name: "ADMIN",
     permissions: ["read", "write", "request_print", "approve_print"],
@@ -9,17 +10,11 @@ export const userRoles = {
     name: "USER",
     permissions: ["read", "request_print"],
   },
-} as const;
+};
 
-export async function inituserRoles() {
+export async function initUserRoles() {
   for (const role of Object.values(userRoles)) {
     const response = await UserRoles.createNewRoleOrAddPermissions(role.name, role.permissions);
     console.log({ ...response, role });
   }
-  // const responses = await Promise.allSettled(
-  //   Object.values(userRoles).map((role) => UserRoles.createNewRoleOrAddPermissions(role.name, role.permissions)),
-  // );
-  // for (const response of responses) {
-  //   console.log(response);
-  // }
 }

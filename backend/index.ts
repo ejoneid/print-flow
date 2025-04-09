@@ -5,6 +5,7 @@ import { getMigrations, migrate } from "bun-sqlite-migrations";
 import { db } from "./src/db.ts";
 import { withAuthentication } from "./src/auth/authenticationUtils.ts";
 import { getUser } from "./src/routes/user.ts";
+import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -24,24 +25,8 @@ serve({
       POST: withLogging(withAuthentication(postPrintQueue)),
     },
   },
-  fetch: withLogging(
-    (req) =>
-      new Response("Not found", {
-        status: 404,
-        headers: {
-          "Content-Type": "text/plain",
-        },
-      }),
-  ),
-  error(error) {
-    console.error(error);
-    return new Response(`Internal Error: ${error.message}`, {
-      status: 500,
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    });
-  },
+  fetch: (req) => notFoundResponse(`Not found: ${req.url}`),
+  error: (error) => internalServerErrorResponse(`Internal Error: ${error.message}`),
 });
 
 console.log(`Server started on port ${port}`);

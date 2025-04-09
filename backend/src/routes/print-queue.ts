@@ -2,12 +2,12 @@ import type { BunRequest } from "bun";
 import { randomUUIDv7 } from "bun";
 import { db } from "../db.ts";
 import type { AuthDetails } from "../auth/authenticationUtils.ts";
-import { Forbidden } from "../auth/authenticationUtils.ts";
 import { printRequestFormSchema } from "shared/browser";
+import { forbiddenResponse } from "../utils/responses.ts";
 
 export function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Response {
   if (!authDetails.permissions.has("read")) {
-    return Forbidden("User does not have permission to read print queue");
+    return forbiddenResponse("User does not have permission to read print queue");
   }
   const selectPrintQueueStatement = db.query("SELECT * FROM print_queue");
   const printQueue = selectPrintQueueStatement.all();
@@ -16,7 +16,7 @@ export function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Respon
 
 export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
   if (!authDetails.permissions.has("request_print")) {
-    return Forbidden("User does not have permission to request print");
+    return forbiddenResponse("User does not have permission to request print");
   }
   const body = printRequestFormSchema.parse(await req.json());
   const insertPrintQueueStatement = db.query(

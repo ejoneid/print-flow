@@ -3,8 +3,9 @@
   "private": true,
   "workspaces": ["backend", "frontend", "auth", "shared"],
   "scripts": {
-    "dev": "concurrently -n 'backend,frontend' -c '#007755,#550077' 'cd backend && bun index.ts' 'cd frontend && bun run dev'",
-    "dev:auth": "concurrently -n 'backend,auth,frontend' -c '#007755,#2f6da3,#550077' 'cd backend && bun run dev:auth' 'cd auth && bun dev' 'cd frontend && bun run dev:auth'",
+    "dev": "concurrently -n 'backend,frontend' -c '#007755,#c0678f' 'cd backend && bun index.ts' 'cd frontend && bun run dev'",
+    "dev:auth": "concurrently -n 'backend,auth,frontend' -c '#007755,#2f6da3,#c0678f' 'cd backend && bun run dev:auth' 'cd auth && bun dev' 'cd frontend && bun run dev:auth'",
+    "tsc": "concurrently -n 'backend,auth,frontend,shared' -c '#007755,#2f6da3,#c0678f,#79b9d3' 'cd backend && bun run tsc' 'cd auth && bun run tsc' 'cd frontend && bun run tsc' 'cd shared && bun run tsc'",
     "format": "biome format --write",
     "lint": "biome lint",
     "lint:fix": "biome lint --write"

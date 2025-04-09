@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun index.ts",
     "dev:auth": "ALLOW_AUTH_OVERRIDE=false bun dev",
-    "tsc": "tsc"
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "jsonwebtoken": "9.0.2",

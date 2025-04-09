@@ -9,19 +9,23 @@ import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 import UserRoles from "supertokens-node/recipe/userroles";
 import { logger } from "shared/node";
-import { inituserRoles } from "./src/roles.ts";
+import { initUserRoles } from "./src/roles.ts";
 
 const port = process.env.PORT ?? 8000;
 
 supertokens.init({
   framework: "express",
   supertokens: {
-    connectionURI: process.env.SUPERTOKENS_CONNECTION_URI,
+    // biome-ignore lint/suspicious/noExtraNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    connectionURI: process.env.SUPERTOKENS_CONNECTION_URI!!,
     apiKey: process.env.SUPERTOKENS_API_KEY,
   },
   appInfo: {
     appName: "Print flow",
-    apiDomain: process.env.API_DOMAIN,
+    // biome-ignore lint/suspicious/noExtraNonNullAssertion: <explanation>
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    apiDomain: process.env.API_DOMAIN!!,
     websiteDomain: process.env.WEBSITE_DOMAIN,
     apiBasePath: "/auth",
     websiteBasePath: "/login",
@@ -36,7 +40,9 @@ supertokens.init({
               thirdPartyId: "google",
               clients: [
                 {
-                  clientId: process.env.GOOGLE_CLIENT_ID,
+                  // biome-ignore lint/suspicious/noExtraNonNullAssertion: <explanation>
+                  // biome-ignore lint/style/noNonNullAssertion: <explanation>
+                  clientId: process.env.GOOGLE_CLIENT_ID!!,
                   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                   scope: ["https://www.googleapis.com/auth/userinfo.email"],
                 },
@@ -61,6 +67,7 @@ app.use((req, res, next) => {
   // Store original methods
   const originalSend = res.send;
   const originalJson = res.json;
+  // @ts-ignore
   // biome-ignore lint/suspicious/noImplicitAnyLet:
   let responseBody;
 
@@ -74,9 +81,11 @@ app.use((req, res, next) => {
     return originalJson.call(this, body);
   };
 
+  // @ts-ignore
   onFinished(res, (err, res) => {
     const duration = Date.now() - startTime;
     logger.info(
+      // @ts-ignore
       `${req.method} ${req.url} - ${res.statusCode} - ${duration}ms - ${responseBody ?? "[No response body.status]"}`,
     );
   });
@@ -95,6 +104,6 @@ app.use(middleware());
 app.use(errorHandler());
 
 app.listen(port, async () => {
-  await inituserRoles();
+  await initUserRoles();
   console.log(`Listening on port ${port}...`);
 });

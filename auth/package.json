@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun index.ts"
+    "dev": "bun index.ts",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "supertokens-node": "21.1.0",
@@ -14,7 +15,9 @@
     "shared": "workspace:*"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "2.8.14",
+    "@types/on-finished": "2.3.2"
   },
   "peerDependencies": {
     "typescript": "^5"
