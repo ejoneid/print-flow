@@ -50,7 +50,12 @@ const mockPrintQueue: PrintQueueItemType[] = [
   },
 ];
 
-export function PrintQueueList() {
+type PrintQueueListProps = {
+  printQueue: PrintQueueItemType[];
+};
+
+export function PrintQueueList({ printQueue }: PrintQueueListProps) {
+  console.log(printQueue)
   return (
     <div className="grid gap-6">
       <div className="flex justify-between items-center">
