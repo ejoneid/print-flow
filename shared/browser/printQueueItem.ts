@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const printRequestFormSchema = z.object({
+export const printQueueItem = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
@@ -20,3 +20,21 @@ export const printRequestFormSchema = z.object({
     )
     .min(1, { message: "At least one material is required" }),
 });
+
+export type Material = {
+    type: string;
+    color: string;
+};
+
+export type PrintQueueItemType = {
+    uuid: string;
+    name: string;
+    requester: string;
+    modelLink: string;
+    materials: Material[];
+    status: "pending" | "approved" | "printing" | "completed" | "rejected";
+    requestDate: string;
+    completionDate: string | null;
+    imageUrl: string;
+};
+
