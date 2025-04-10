@@ -3,23 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-
-type Material = {
-  type: string;
-  color: string;
-};
-
-export type PrintQueueItemType = {
-  id: string;
-  name: string;
-  requester: string;
-  modelLink: string;
-  materials: Material[];
-  status: "pending" | "approved" | "printing" | "completed" | "rejected";
-  requestDate: string;
-  completionDate: string | null;
-  imageUrl: string;
-};
+import type {PrintQueueItemType} from "shared/browser";
 
 type PrintQueueItemProps = {
   item: PrintQueueItemType;
@@ -95,7 +79,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
           </Link>
         </Button>
         <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
-          <Link to={`/print/${item.id}`}>View Details</Link>
+          <Link to={`/print/${item.uuid}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>

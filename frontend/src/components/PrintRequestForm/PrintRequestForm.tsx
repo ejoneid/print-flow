@@ -18,17 +18,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form.tsx";
-import { printRequestFormSchema } from "shared/browser";
+import { printQueueItem } from "shared/browser";
 
 const materialTypes = ["PLA", "PETG", "ASA", "TPU"];
 const materialColors = ["Any color", "Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Gray"];
 
-export type FormValues = z.infer<typeof printRequestFormSchema>;
+export type FormValues = z.infer<typeof printQueueItem>;
 type PrintRequestFormProps = { onSubmit: (values: FormValues) => void; isSubmitting: boolean };
 
 export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(printRequestFormSchema),
+    resolver: zodResolver(printQueueItem),
     defaultValues: {
       name: "",
       requesterName: "",

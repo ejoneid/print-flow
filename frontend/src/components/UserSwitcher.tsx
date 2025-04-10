@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
+import {User} from "lucide-react";
 
 type TestUser = {
   name: string;
@@ -43,8 +44,8 @@ export const UserSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <span className="material-symbols-outlined">person</span>
+        <Button variant="outline">
+          <User className="size-5" />
         </Button>
       </DropdownMenuTrigger>
 

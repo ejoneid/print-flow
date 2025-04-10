@@ -64,8 +64,8 @@ export function PrintQueueList({ printQueue }: PrintQueueListProps) {
       </div>
 
       <div className="grid gap-4">
-        {mockPrintQueue.map((item) => (
-          <PrintQueueItem key={item.id} item={item} />
+        {printQueue.map((item) => (
+          <PrintQueueItem key={item.uuid} item={item} />
         ))}
       </div>
     </div>
