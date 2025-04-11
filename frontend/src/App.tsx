@@ -1,21 +1,9 @@
 import printFlowLogo from "/print_flow_logo.svg";
-import { useQuery } from "@tanstack/react-query";
 import { UserSwitcher } from "./components/UserSwitcher.tsx";
-import { requestHeaders } from "./queryClient.ts";
 import { UserMenu } from "@/components/UserMenu.tsx";
 import { Outlet } from "react-router-dom";
 
 function App() {
-  const { data } = useQuery({
-    queryKey: ["queue"],
-    queryFn: () =>
-      fetch("/api/print-queue", {
-        headers: requestHeaders,
-      }).then((res) => res.json()),
-  });
-
-  console.log(data);
-
   return (
     <div className="min-h-screen flex flex-col">
       <header>
@@ -29,7 +17,7 @@ function App() {
           </span>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 mb-16">
         <Outlet />
       </main>
     </div>

@@ -1,15 +1,12 @@
 import { serve } from "bun";
 import { getPrintQueue, postPrintQueue } from "./src/routes/print-queue.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
-import { getMigrations, migrate } from "bun-sqlite-migrations";
 import { db } from "./src/db.ts";
 import { withAuthentication } from "./src/auth/authenticationUtils.ts";
 import { getUser } from "./src/routes/user.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 
 const port = process.env.PORT ?? 3001;
-
-migrate(db, getMigrations("./migrations"));
 
 serve({
   port: port,

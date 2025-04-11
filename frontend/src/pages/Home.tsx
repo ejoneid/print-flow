@@ -1,8 +1,20 @@
 import { Button } from "@/components/ui/button.tsx";
 import { Link } from "react-router-dom";
 import { PrintQueueList } from "@/components/PrintQueueList.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { kyClient } from "@/queryClient.ts";
+import { useUserPermissions } from "@/hooks/useUser.tsx";
+import type { PrintQueueItemType } from "shared/browser";
 
 export function HomePage() {
+  const { data } = useQuery({
+    queryKey: ["queue"],
+    queryFn: () => kyClient("/api/print-queue").json<PrintQueueItemType[]>(),
+  });
+  const permissions = useUserPermissions();
+
+  console.log(data);
+
   return (
     <div className="container mx-auto px-4">
       <div className="mb-8">
@@ -11,13 +23,15 @@ export function HomePage() {
           <Button asChild>
             <Link to="/request">Request a Print</Link>
           </Button>
-          <Button variant="outline" asChild>
-            <Link to="/admin">Admin Panel</Link>
-          </Button>
+          {permissions.approve_print && (
+            <Button variant="outline" asChild>
+              <Link to="/admin">Admin Panel</Link>
+            </Button>
+          )}
         </div>
       </div>
 
-      <PrintQueueList />
+      <PrintQueueList printQueue={data ?? []} />
     </div>
   );
 }

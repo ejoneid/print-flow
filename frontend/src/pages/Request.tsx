@@ -1,3 +1,4 @@
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { PrintRequestFormCreate } from "@/components/PrintRequestForm/PrintRequestFormCreate.tsx";
@@ -8,7 +9,7 @@ export function RequestPage() {
       <header className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Button variant="outline" size="sm">
-            <span className="material-symbols-outlined">arrow_back</span>
+            <ArrowLeft size={60} />
             <Link to="/">Back to Queue</Link>
           </Button>
         </div>

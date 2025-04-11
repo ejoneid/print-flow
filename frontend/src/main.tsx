@@ -74,5 +74,4 @@ const Application = () => (
   </ConditionalSuperTokensWrapper>
 );
 
-// biome-ignore lint/style/noNonNullAssertion:
 createRoot(document.getElementById("root")!).render(<Application />);
