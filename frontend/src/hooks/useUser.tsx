@@ -1,25 +1,28 @@
 import { createContext, type ReactElement, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { requestHeaders } from "../queryClient.ts";
+import { kyClient } from "../queryClient.ts";
+import { type PrintFlowUser, USER_PERMISSIONS, type UserPermission } from "shared/browser";
 
-type PrintFlowUser = {
-  userUuid: string;
-};
-
-const UserContext = createContext<PrintFlowUser | null>(null);
+const UserContext = createContext<PrintFlowUser | undefined>(undefined);
 export const useUser = () => {
   return useContext(UserContext);
+};
+export const useUserPermissions = () => {
+  const user = useUser();
+  return USER_PERMISSIONS.reduce(
+    (acc, permission) => {
+      acc[permission] = user?.permissions?.includes(permission) ?? false;
+      return acc;
+    },
+    {} as Record<UserPermission, boolean>,
+  );
 };
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {
   const { data } = useQuery({
     queryKey: ["user"],
-    queryFn: () =>
-      fetch("/api/user", {
-        headers: requestHeaders,
-      }).then((res) => res.json()),
+    queryFn: () => kyClient("/api/user").json<PrintFlowUser>(),
   });
-  console.log(data);
 
   return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
 };

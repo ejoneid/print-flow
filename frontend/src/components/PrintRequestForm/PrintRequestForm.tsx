@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button.tsx";
@@ -9,29 +8,31 @@ import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form.tsx";
-import { printRequestFormSchema } from "shared/browser";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
+import { printQueueItem, type PrintQueueItemBody } from "shared/browser";
+import { clsx } from "clsx";
 
 const materialTypes = ["PLA", "PETG", "ASA", "TPU"];
-const materialColors = ["Any color", "Black", "White", "Red", "Blue", "Green", "Yellow", "Orange", "Gray"];
+const materialColors = [
+  { name: "Any color", colorClassName: "" },
+  { name: "Black", colorClassName: "bg-black" },
+  { name: "White", colorClassName: "bg-white border border-black" },
+  { name: "Red", colorClassName: "bg-red-600" },
+  { name: "Blue", colorClassName: "bg-blue-600" },
+  { name: "Green", colorClassName: "bg-green-500" },
+  { name: "Yellow", colorClassName: " bg-yellow-300" },
+  { name: "Orange", colorClassName: "bg-orange-400" },
+  { name: "Gray", colorClassName: "bg-gray-600" },
+];
 
-export type FormValues = z.infer<typeof printRequestFormSchema>;
+export type FormValues = PrintQueueItemBody;
 type PrintRequestFormProps = { onSubmit: (values: FormValues) => void; isSubmitting: boolean };
 
 export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(printRequestFormSchema),
+    resolver: zodResolver(printQueueItem),
     defaultValues: {
       name: "",
-      requesterName: "",
       modelLink: "",
       description: "",
       materials: [{ type: "", color: "" }],
@@ -67,23 +68,6 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                     <FormControl>
                       <Input placeholder="https://example.com/model" {...field} />
                     </FormControl>
-                    <FormDescription>Link to the 3D model file or page</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="requesterName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Your Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John Doe" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -116,7 +100,7 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                   key={`material-${index}`}
                   className="flex gap-2 mb-2"
                 >
-                  <div className="grid grid-cols-2 gap-2 flex-1">
+                  <div className="flex gap-4">
                     <FormField
                       control={form.control}
                       name={`materials.${index}.type`}
@@ -124,7 +108,7 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                         <FormItem>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="min-w-40">
                                 <SelectValue placeholder="Material Type" />
                               </SelectTrigger>
                             </FormControl>
@@ -136,7 +120,6 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                               ))}
                             </SelectContent>
                           </Select>
-                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -148,14 +131,15 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                         <FormItem>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger>
+                              <SelectTrigger className="min-w-40">
                                 <SelectValue placeholder="Color" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               {materialColors.map((color) => (
-                                <SelectItem key={color} value={color}>
-                                  {color}
+                                <SelectItem key={color.name} value={color.name}>
+                                  <span className={clsx(`h-4 w-4 ${color.colorClassName} rounded-full`)} />
+                                  {color.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -190,6 +174,7 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                 variant="outline"
                 size="sm"
                 className="mt-2"
+                disabled={form.watch("materials").length >= 4}
                 onClick={() => {
                   const currentMaterials = form.getValues("materials");
                   form.setValue("materials", [...currentMaterials, { type: "", color: "" }]);

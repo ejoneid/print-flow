@@ -28,11 +28,8 @@ export const withAuthentication = (handler: AuthenticatedRequestHandler): Reques
       return unauthorizedResponse(`No test user with uuid ${overrideUserUuid}`);
     }
 
-    const cookieString = req.headers.get("cookie");
-    if (!cookieString) return unauthorizedResponse("No cookie header");
-
-    const cookies = parseCookie(cookieString);
-    const jwt = cookies.sAccessToken;
+    const jwt = req.cookies.get("sAccessToken");
+    if (!jwt) return unauthorizedResponse("Missing sAccessToken in cookie");
 
     let error: VerifyErrors | undefined;
     JsonWebToken.verify(jwt, getKey, {}, (err) => {
@@ -107,16 +104,3 @@ const getKey = (header, callback) => {
     callback(null, signingKey);
   });
 };
-
-function parseCookie(str: string): Record<string, string> {
-  return str
-    .split(";")
-    .map((v) => v.split("="))
-    .reduce(
-      (acc, v) => {
-        acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
-        return acc;
-      },
-      {} as Record<string, string>,
-    );
-}

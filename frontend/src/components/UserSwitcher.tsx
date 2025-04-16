@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { queryClient, requestHeaders, USER_UUID_HEADER } from "../queryClient.ts";
+import { queryClient, USER_UUID_HEADER } from "../queryClient.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
+import { User } from "lucide-react";
 
 type TestUser = {
   name: string;
@@ -27,15 +28,15 @@ export const testUsers: Record<string, TestUser> = {
   },
 };
 
+export let selectedUserUuid = localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
+
 export const UserSwitcher = () => {
   const [user, setUser] = useState<string>(() => sessionStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid);
 
   useEffect(() => {
     sessionStorage.setItem(USER_UUID_HEADER, user);
-    // @ts-ignore
-    const userHeader = requestHeaders.get(USER_UUID_HEADER);
-    if (userHeader !== user) {
-      requestHeaders.set(USER_UUID_HEADER, user);
+    if (selectedUserUuid !== user) {
+      selectedUserUuid = user;
       queryClient.invalidateQueries();
     }
   }, [user]);
@@ -43,8 +44,8 @@ export const UserSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          <span className="material-symbols-outlined">person</span>
+        <Button variant="outline">
+          <User className="size-5" />
         </Button>
       </DropdownMenuTrigger>
 
