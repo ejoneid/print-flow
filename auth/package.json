@@ -15,7 +15,6 @@
     "shared": "workspace:*"
   },
   "devDependencies": {
-    "@types/bun": "latest",
     "@types/cors": "2.8.14",
     "@types/on-finished": "2.3.2"
   },
