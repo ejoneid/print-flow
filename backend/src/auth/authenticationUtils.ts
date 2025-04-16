@@ -90,9 +90,7 @@ function isUserPermission(str: string): str is UserPermission {
 }
 
 const client = jwksClient({
-  // biome-ignore lint/suspicious/noExtraNonNullAssertion:
-  // biome-ignore lint/style/noNonNullAssertion:
-  jwksUri: process.env.JWKS_URI!!,
+  jwksUri: process.env.JWKS_URI!,
 });
 
 // @ts-ignore
