@@ -1,7 +1,6 @@
 import { serve } from "bun";
 import { getPrintQueue, postPrintQueue } from "./src/routes/print-queue.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
-import { db } from "./src/db.ts";
 import { withAuthentication } from "./src/auth/authenticationUtils.ts";
 import { getUser } from "./src/routes/user.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";

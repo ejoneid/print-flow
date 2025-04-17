@@ -5,6 +5,9 @@ export type UserPermission = (typeof USER_PERMISSIONS)[number];
 
 export type PrintFlowUser = {
   userUuid: string;
+  fullName: string;
+  email: string;
+  avatar: string | undefined;
   roles: UserRole[];
   permissions: UserPermission[];
 };

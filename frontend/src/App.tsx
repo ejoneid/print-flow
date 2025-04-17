@@ -2,7 +2,7 @@ import printFlowLogo from "/print_flow_logo.svg";
 import { UserSwitcher } from "./components/UserSwitcher.tsx";
 import { UserMenu } from "@/components/UserMenu.tsx";
 import { Outlet } from "react-router-dom";
-import {Toaster} from "@/components/ui/sonner.tsx";
+import { Toaster } from "@/components/ui/sonner.tsx";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
       <main className="flex-1 mb-16">
         <Outlet />
       </main>
-        <Toaster richColors />
+      <Toaster richColors />
     </div>
   );
 }

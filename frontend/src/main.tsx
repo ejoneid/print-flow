@@ -27,7 +27,19 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
       websiteBasePath: "/login",
     },
     recipeList: [
-      EmailPassword.init(),
+      EmailPassword.init({
+        signInAndUpFeature: {
+          signUpForm: {
+            formFields: [
+              {
+                id: "fullName",
+                label: "Full name",
+                placeholder: "First name and last name",
+              },
+            ],
+          },
+        },
+      }),
       Session.init(),
       ThirdParty.init({
         signInAndUpFeature: {
