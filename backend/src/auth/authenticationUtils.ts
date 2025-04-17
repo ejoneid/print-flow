@@ -9,6 +9,9 @@ import { USER_PERMISSIONS, USER_ROLES, type UserPermission, type UserRole } from
 
 export type AuthDetails = {
   userUuid: UUID;
+  fullName: string;
+  email: string;
+  avatar: string | undefined;
   roles: Set<UserRole>;
   permissions: Set<UserPermission>;
 };
@@ -49,6 +52,9 @@ export const withAuthentication = (handler: AuthenticatedRequestHandler): Reques
     const decodedJwt = JsonWebToken.decode(jwt) as JwtPayload;
     const authDetails: AuthDetails = {
       userUuid: decodedJwt.sub as UUID,
+      fullName: decodedJwt.userData.fullName as string,
+      email: decodedJwt.userData.email as string,
+      avatar: decodedJwt.userData.avatar as string | undefined,
       roles: extractUserRoles(decodedJwt),
       permissions: extractUserPermissions(decodedJwt),
     };

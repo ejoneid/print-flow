@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { printQueueItem, type PrintQueueItemBody } from "shared/browser";
 import { clsx } from "clsx";
-import {globalEventEmitter} from "@/utils/eventEmitter.ts";
+import { globalEventEmitter } from "@/utils/eventEmitter.ts";
 
 const materialTypes = ["PLA", "PETG", "ASA", "TPU"];
 const materialColors = [
@@ -40,9 +40,9 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
     },
   });
 
-  globalEventEmitter.on('print-request-created', () => {
-      form.reset();
-  })
+  globalEventEmitter.on("print-request-created", () => {
+    form.reset();
+  });
 
   return (
     <Card>
