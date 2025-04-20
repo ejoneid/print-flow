@@ -11,3 +11,8 @@ export type PrintFlowUser = {
   roles: UserRole[];
   permissions: UserPermission[];
 };
+
+export type UserMetaData = {
+  fullName: string;
+  avatar: string | undefined;
+}
