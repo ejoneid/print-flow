@@ -1,8 +1,8 @@
 import { serve } from "bun";
-import { getPrintQueue, postPrintQueue } from "./src/routes/print-queue.ts";
+import { getPrintQueue, postPrintQueue } from "./src/print-queue/printQueueService.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
-import { withAuthentication } from "./src/auth/authenticationUtils.ts";
-import { getUser } from "./src/routes/user.ts";
+import { withAuthentication } from "./src/security/withAuthentication.ts";
+import { getUser } from "./src/user/userService.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 
 const port = process.env.PORT ?? 3001;

@@ -33,6 +33,7 @@
         "jsonwebtoken": "9.0.2",
         "jwks-rsa": "3.2.0",
         "shared": "workspace:*",
+        "supertokens-node": "21.1.0",
         "zod": "3.24.2",
       },
       "peerDependencies": {

@@ -1,7 +1,7 @@
 import type { RequestHandler } from "../utils/logginUtils.ts";
 import JsonWebToken, { type JwtPayload, type VerifyErrors } from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
-import { TEST_USERS } from "./testUsers.ts";
+import { TEST_USERS } from "../user/testUsers.ts";
 import { logger } from "shared/node";
 import type { BunRequest } from "bun";
 import { unauthorizedResponse } from "../utils/responses.ts";

@@ -1,4 +1,4 @@
-import { type BunRequest, randomUUIDv7 } from "bun";
+import {type BunRequest, randomUUIDv7} from "bun";
 import {
   columnsToString,
   db,
@@ -7,17 +7,23 @@ import {
   PRINT_QUEUE_COLUMNS,
   type PrintQueueEntity,
 } from "../db.ts";
-import type { AuthDetails } from "../auth/authenticationUtils.ts";
-import { printQueueItem, type PrintQueueItemBody, type PrintQueueItemType } from "shared/browser";
-import { forbiddenResponse } from "../utils/responses.ts";
-import { extractType } from "../utils/typeUtils.ts";
+import type {AuthDetails} from "../security/withAuthentication.ts";
+import {printQueueItem, type PrintQueueItemBody, type PrintQueueItemType} from "shared/browser";
+import {forbiddenResponse} from "../utils/responses.ts";
+import {extractType} from "../utils/typeUtils.ts";
 
-export function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Response {
+import {getUserMetaDataByIds} from "../user/userService.ts";
+
+export async function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
   if (!authDetails.permissions.has("read")) {
     return forbiddenResponse("User does not have permission to read print queue");
   }
-  const printQueue = selectPrintQueueStatement.all(null);
-  return Response.json(joinPrintQueueAndMaterials(printQueue) satisfies PrintQueueItemType[]);
+  const entities = selectPrintQueueStatement.all(null);
+  const printQueue = joinPrintQueueAndMaterials(entities)
+  const requesterUuids = printQueue.map(item => item.requester);
+  const requestersMap = await getUserMetaDataByIds(requesterUuids)
+  const result = printQueue.map(item => ({...item, requester: requestersMap.get(item.requester)!.fullName}))
+  return Response.json(result satisfies PrintQueueItemType[]);
 }
 
 export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
