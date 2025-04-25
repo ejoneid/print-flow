@@ -18,6 +18,7 @@ const port = process.env.PORT ?? 8000;
 
 supertokens.init({
   framework: "express",
+  debug: process.env.AUTH_DEBUG === "true",
   supertokens: {
     connectionURI: process.env.SUPERTOKENS_CONNECTION_URI!,
     apiKey: process.env.SUPERTOKENS_API_KEY,
