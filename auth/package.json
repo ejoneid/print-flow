@@ -8,7 +8,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "supertokens-node": "21.1.0",
+    "supertokens-node": "catalog:",
     "express": "4.21.2",
     "on-finished": "2.4.1",
     "cors": "2.8.5",
