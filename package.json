@@ -1,7 +1,13 @@
 {
   "name": "print-flow",
   "private": true,
-  "workspaces": ["backend", "frontend", "auth", "shared"],
+  "workspaces": {
+    "packages": ["backend", "frontend", "auth", "shared"],
+    "catalog": {
+      "supertokens-node": "22.1.0",
+      "zod": "3.25.42"
+    }
+  },
   "scripts": {
     "dev": "concurrently -n 'backend,frontend' -c '#007755,#c0678f' 'cd backend && bun index.ts' 'cd frontend && bun run dev'",
     "dev:auth": "concurrently -n 'backend,auth,frontend' -c '#007755,#2f6da3,#c0678f' 'cd backend && bun run dev:auth' 'cd auth && bun dev' 'cd frontend && bun run dev:auth'",
@@ -13,6 +19,6 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "concurrently": "9.1.2",
-    "@types/bun": "1.2.8"
+    "@types/bun": "1.2.14"
   }
 }
