@@ -74,7 +74,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row gap-2 pt-2">
         <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
-          <Link to="item.modelLink" target="_blank" rel="noopener noreferrer">
+          <Link to={item.modelLink} target="_blank" rel="noopener noreferrer">
             <ExternalLink className="h-4 w-4 mr-2" />
             View Model
           </Link>
