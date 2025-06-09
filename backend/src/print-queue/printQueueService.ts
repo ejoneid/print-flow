@@ -1,5 +1,10 @@
 import { type BunRequest, randomUUIDv7 } from "bun";
 import {
+  printQueueItem,
+  type PrintQueueItemBody,
+  type PrintQueueItemType,
+} from "shared/browser";
+import {
   columnsToString,
   db,
   MATERIAL_COLUMNS,
@@ -8,16 +13,11 @@ import {
   type PrintQueueEntity,
 } from "../db.ts";
 import type { AuthDetails } from "../security/withAuthentication.ts";
-import {
-  printQueueItem,
-  type PrintQueueItemBody,
-  type PrintQueueItemType,
-} from "shared/browser";
 import { forbiddenResponse } from "../utils/responses.ts";
 import { extractType } from "../utils/typeUtils.ts";
 
 import { getUserMetaDataByIds } from "../user/userService.ts";
-import { getPrintablesImageUrl } from "./imageUrlScraper.ts";
+import { getImageUrl } from "./imageUrlScraper.ts";
 
 export async function getPrintQueue(
   req: BunRequest,
@@ -47,7 +47,7 @@ export async function postPrintQueue(
     return forbiddenResponse("User does not have permission to request print");
   }
   const body = printQueueItem.parse(await req.json());
-  const imageUrl = await getPrintablesImageUrl(body.modelLink);
+  const imageUrl = await getImageUrl(body.modelLink);
   await insertTransaction(body, imageUrl, authDetails.userUuid);
   return new Response(null, { status: 204 });
 }

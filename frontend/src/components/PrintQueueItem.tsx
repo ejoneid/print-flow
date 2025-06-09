@@ -57,11 +57,11 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="grid sm:grid-cols-[1fr_2fr] gap-4">
-          <div className="relative h-[150px] w-full rounded-md overflow-hidden border">
+          <div>
             <img
               src={item.imageUrl ?? "/placeholder.svg"}
               alt={item.name}
-              className="object-cover"
+              className="relative rounded-md border max-h-60 max-w-[380px] object-contain"
             />
           </div>
           <div className="space-y-2">
