@@ -2,7 +2,8 @@ import { Database } from "bun:sqlite";
 import type { PrintStatus } from "shared/browser";
 import { getMigrations, migrate } from "bun-sqlite-migrations";
 
-const DB_FILE = process.env.DB_LOCATION ?? `${import.meta.dir}/../print-flow.sqlite`;
+const DB_FILE =
+  process.env.DB_LOCATION ?? `${import.meta.dir}/../print-flow.sqlite`;
 export const db = new Database(DB_FILE, { strict: true, create: true });
 migrate(db, getMigrations("./migrations"));
 
@@ -10,6 +11,7 @@ export type PrintQueueEntity = {
   uuid: UUID;
   name: string;
   url: string;
+  image_url: string | null;
   status: PrintStatus;
   status_updated_by: string;
   created_by: string;
@@ -24,7 +26,10 @@ export type MaterialEntity = {
   color: string;
 };
 
-export function columnsToString<T>(columns: DBColumns<T>, prefix: string): string {
+export function columnsToString<T>(
+  columns: DBColumns<T>,
+  prefix: string,
+): string {
   return columns
     .map((column) => {
       if (typeof column === "string") {
@@ -42,10 +47,15 @@ export const PRINT_QUEUE_COLUMNS: DBColumns<PrintQueueEntity> = [
   "uuid",
   "name",
   "url",
+  "image_url",
   "status",
   "status_updated_by",
   "created_by",
   "created_at",
   "completed_at",
 ];
-export const MATERIAL_COLUMNS: DBColumns<MaterialEntity> = ["print_queue_uuid", "type", "color"];
+export const MATERIAL_COLUMNS: DBColumns<MaterialEntity> = [
+  "print_queue_uuid",
+  "type",
+  "color",
+];
