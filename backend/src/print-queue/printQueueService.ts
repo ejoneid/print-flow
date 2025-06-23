@@ -1,4 +1,5 @@
-import {type BunRequest, randomUUIDv7} from "bun";
+import { type BunRequest, randomUUIDv7 } from "bun";
+import { printQueueItem, type PrintQueueItemBody, type PrintQueueItemType } from "shared/browser";
 import {
   columnsToString,
   db,
@@ -7,22 +8,25 @@ import {
   PRINT_QUEUE_COLUMNS,
   type PrintQueueEntity,
 } from "../db.ts";
-import type {AuthDetails} from "../security/withAuthentication.ts";
-import {printQueueItem, type PrintQueueItemBody, type PrintQueueItemType} from "shared/browser";
-import {forbiddenResponse} from "../utils/responses.ts";
-import {extractType} from "../utils/typeUtils.ts";
+import type { AuthDetails } from "../security/withAuthentication.ts";
+import { forbiddenResponse } from "../utils/responses.ts";
+import { extractType } from "../utils/typeUtils.ts";
 
-import {getUserMetaDataByIds} from "../user/userService.ts";
+import { getUserMetaDataByIds } from "../user/userService.ts";
+import { getImageUrl } from "./imageUrlScraper.ts";
 
 export async function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
   if (!authDetails.permissions.has("read")) {
     return forbiddenResponse("User does not have permission to read print queue");
   }
   const entities = selectPrintQueueStatement.all(null);
-  const printQueue = joinPrintQueueAndMaterials(entities)
-  const requesterUuids = printQueue.map(item => item.requester);
-  const requestersMap = await getUserMetaDataByIds(requesterUuids)
-  const result = printQueue.map(item => ({...item, requester: requestersMap.get(item.requester)!.fullName}))
+  const printQueue = joinPrintQueueAndMaterials(entities);
+  const requesterUuids = printQueue.map((item) => item.requester);
+  const requestersMap = await getUserMetaDataByIds(requesterUuids);
+  const result = printQueue.map((item) => ({
+    ...item,
+    requester: requestersMap.get(item.requester)!.fullName,
+  }));
   return Response.json(result satisfies PrintQueueItemType[]);
 }
 
@@ -31,8 +35,10 @@ export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails):
     return forbiddenResponse("User does not have permission to request print");
   }
   const body = printQueueItem.parse(await req.json());
-  insertTransaction(body, authDetails.userUuid);
-  return Response.json(true);
+  const imageUrl = await getImageUrl(body.modelLink);
+  console.log(imageUrl);
+  await insertTransaction(body, imageUrl, authDetails.userUuid);
+  return new Response(null, { status: 204 });
 }
 
 function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[]): PrintQueueItemType[] {
@@ -53,7 +59,7 @@ function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[
         modelLink: item.url,
         requestDate: item.created_at,
         completionDate: item.completed_at,
-        imageUrl: null,
+        imageUrl: item.image_url,
         materials: materials.map((material) => ({
           type: material.type,
           color: material.color,
@@ -68,19 +74,20 @@ const SELECT_PRINT_QUEUE_SQL = `SELECT ${columnsToString(PRINT_QUEUE_COLUMNS, "p
                                        LEFT JOIN material m ON pq.uuid = m.print_queue_uuid`;
 const selectPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(SELECT_PRINT_QUEUE_SQL);
 const insertPrintQueueStatement = db.query<PrintQueueEntity, Omit<PrintQueueEntity, "created_at" | "completed_at">>(
-  "INSERT INTO print_queue (uuid, name, url, status, status_updated_by, created_by) VALUES ($uuid, $name, $url, $status, $status_updated_by, $created_by) RETURNING *",
+  "INSERT INTO print_queue (uuid, name, url, image_url, status, status_updated_by, created_by) VALUES ($uuid, $name, $url, $image_url, $status, $status_updated_by, $created_by) RETURNING *",
 );
 
 const insertMaterialStatement = db.query(
   "INSERT INTO material (uuid, print_queue_uuid, type, color) VALUES ($uuid, $print_queue_uuid, $type, $color) RETURNING *",
 );
 
-const insertTransaction = db.transaction((body: PrintQueueItemBody, userUuid: UUID) => {
+const insertTransaction = db.transaction((body: PrintQueueItemBody, imageUrl: string | null, userUuid: UUID) => {
   const uuid = randomUUIDv7();
   insertPrintQueueStatement.run({
     uuid: uuid,
     name: body.name,
     url: body.modelLink,
+    image_url: imageUrl,
     status: "pending",
     status_updated_by: userUuid,
     created_by: userUuid,

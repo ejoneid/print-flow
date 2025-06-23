@@ -35,7 +35,7 @@ export const withAuthentication = (handler: AuthenticatedRequestHandler): Reques
     // TEMPORARY USING COOKIE LIBRARY WHILE Bun.CookieMap IS BROKEN
     const cookieHeader = req.headers.get("cookie") || "";
     const cookies = cookie.parse(cookieHeader);
-    
+
     const jwt = cookies.sAccessToken;
     if (!jwt) return unauthorizedResponse("Missing sAccessToken in cookie");
 

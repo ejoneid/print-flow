@@ -15,4 +15,4 @@ export type PrintFlowUser = {
 export type UserMetaData = {
   fullName: string;
   avatar: string | undefined;
-}
+};

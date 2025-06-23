@@ -15,7 +15,9 @@
     "jwks-rsa": "3.2.0",
     "bun-sqlite-migrations": "1.0.2",
     "zod": "catalog:",
-    "shared": "workspace:*"
+    "shared": "workspace:*",
+    "cheerio": "^1.0.0",
+    "ky": "catalog:"
   },
   "peerDependencies": {
     "typescript": "^5"

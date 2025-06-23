@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, ExternalLink, Printer, XCircle } from "lucide-react";
+import { CheckCircle, Clock, ExternalLink, Printer, XCircle, Image } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -43,8 +43,12 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
       </CardHeader>
       <CardContent className="pb-2">
         <div className="grid sm:grid-cols-[1fr_2fr] gap-4">
-          <div className="relative h-[150px] w-full rounded-md overflow-hidden border">
-            {/*<Image src={item.imageUrl || "/placeholder.svg"} alt={item.name} fill className="object-cover" />*/}
+          <div>
+            <img
+              src={item.imageUrl ?? "/placeholder.svg"}
+              alt={item.name}
+              className="relative rounded-md border max-h-60 max-w-[380px] object-contain"
+            />
           </div>
           <div className="space-y-2">
             <div>

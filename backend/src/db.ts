@@ -10,6 +10,7 @@ export type PrintQueueEntity = {
   uuid: UUID;
   name: string;
   url: string;
+  image_url: string | null;
   status: PrintStatus;
   status_updated_by: string;
   created_by: string;
@@ -42,6 +43,7 @@ export const PRINT_QUEUE_COLUMNS: DBColumns<PrintQueueEntity> = [
   "uuid",
   "name",
   "url",
+  "image_url",
   "status",
   "status_updated_by",
   "created_by",
