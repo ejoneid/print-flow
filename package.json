@@ -2,7 +2,12 @@
   "name": "print-flow",
   "private": true,
   "workspaces": {
-    "packages": ["backend", "frontend", "auth", "shared"],
+    "packages": [
+      "backend",
+      "frontend",
+      "auth",
+      "shared"
+    ],
     "catalog": {
       "supertokens-node": "22.1.0",
       "zod": "3.25.42",
@@ -20,6 +25,6 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "concurrently": "9.1.2",
-    "@types/bun": "1.2.14"
+    "@types/bun": "1.3.0"
   }
 }
