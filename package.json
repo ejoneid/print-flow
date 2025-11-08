@@ -2,15 +2,10 @@
   "name": "print-flow",
   "private": true,
   "workspaces": {
-    "packages": [
-      "backend",
-      "frontend",
-      "auth",
-      "shared"
-    ],
+    "packages": ["backend", "frontend", "auth", "shared"],
     "catalog": {
       "supertokens-node": "22.1.0",
-      "zod": "3.25.42",
+      "zod": "3.25.56",
       "ky": "1.8.1"
     }
   },

@@ -1,4 +1,4 @@
-import printFlowLogo from "/print_flow_logo.svg";
+import printFlowLogo from "../public/print_flow_logo.svg";
 import { UserSwitcher } from "./components/UserSwitcher.tsx";
 import { UserMenu } from "@/components/UserMenu.tsx";
 import { Outlet } from "react-router-dom";
@@ -14,7 +14,7 @@ function App() {
             <h1 className="lg:text-5xl text-3xl font-bold mb-2">Print Flow</h1>
           </div>
           <span className="mr-1">
-            {import.meta.env.VITE_OVERRIDE_AUTH === "true" ? <UserSwitcher /> : <UserMenu />}
+            {process.env.FRONTEND_OVERRIDE_AUTH === "true" ? <UserSwitcher /> : <UserMenu />}
           </span>
         </div>
       </header>

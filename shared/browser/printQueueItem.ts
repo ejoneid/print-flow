@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
-export const printQueueItem = z.object({
+export const printQueueItemSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  modelLink: z.string().url({
+  modelLink: z.url({
     message: "Please enter a valid URL.",
   }),
   description: z.string().optional(),
@@ -18,7 +18,7 @@ export const printQueueItem = z.object({
     .min(1, { message: "At least one material is required" }),
 });
 
-export type PrintQueueItemBody = z.infer<typeof printQueueItem>;
+export type PrintQueueItemBody = z.infer<typeof printQueueItemSchema>;
 
 export type Material = {
   type: string;

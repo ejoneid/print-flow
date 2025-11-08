@@ -17,7 +17,7 @@ import { UserContextProvider } from "./hooks/useUser.tsx";
 import type { ReactNode } from "react";
 import { RequestPage } from "@/pages/Request.tsx";
 
-if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
+if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
     appInfo: {
       appName: "Print flow",
@@ -51,15 +51,15 @@ if (import.meta.env.VITE_OVERRIDE_AUTH !== "true") {
 }
 
 const ConditionalSuperTokensRoutes = () =>
-  import.meta.env.VITE_OVERRIDE_AUTH === "true"
+  process.env.FRONTEND_OVERRIDE_AUTH === "true"
     ? null
     : getSuperTokensRoutesForReactRouterDom(reactRouterDom, [ThirdPartyPreBuiltUI, EmailPasswordPreBuiltUI]);
 
 const ConditionalSuperTokensWrapper = ({ children }: { children: ReactNode }) =>
-  import.meta.env.VITE_OVERRIDE_AUTH === "true" ? children : <SuperTokensWrapper>{children}</SuperTokensWrapper>;
+  process.env.FRONTEND_OVERRIDE_AUTH === "true" ? children : <SuperTokensWrapper>{children}</SuperTokensWrapper>;
 
 const ConditionalSessionAuth = ({ children }: { children: ReactNode }) =>
-  import.meta.env.VITE_OVERRIDE_AUTH === "true" ? children : <SessionAuth>{children}</SessionAuth>;
+  process.env.FRONTEND_OVERRIDE_AUTH === "true" ? children : <SessionAuth>{children}</SessionAuth>;
 
 const Application = () => (
   <ConditionalSuperTokensWrapper>
