@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
-import { printQueueItemSchema, type PrintQueueItemBody } from "shared/browser";
+import { printQueueItem, type PrintQueueItemBody } from "shared/browser";
 import { clsx } from "clsx";
 import { globalEventEmitter } from "@/utils/eventEmitter.ts";
 
@@ -27,14 +27,11 @@ const materialColors = [
 ];
 
 export type FormValues = PrintQueueItemBody;
-type PrintRequestFormProps = {
-  onSubmit: (values: FormValues) => void;
-  isSubmitting: boolean;
-};
+type PrintRequestFormProps = { onSubmit: (values: FormValues) => void; isSubmitting: boolean };
 
 export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(printQueueItemSchema),
+    resolver: zodResolver(printQueueItem),
     defaultValues: {
       name: "",
       modelLink: "",

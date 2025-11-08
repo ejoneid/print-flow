@@ -17,7 +17,7 @@ type TestUser = {
   uuid: string;
 };
 
-export const testUsers = {
+export const testUsers: Record<string, TestUser> = {
   default: {
     name: "user",
     uuid: "defaultTestUserUuid",
@@ -26,7 +26,7 @@ export const testUsers = {
     name: "admin",
     uuid: "adminUserUuid",
   },
-} as const;
+};
 
 export let selectedUserUuid = localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
 

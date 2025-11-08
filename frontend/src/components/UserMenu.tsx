@@ -21,7 +21,7 @@ export function UserMenu() {
   const user = useUser();
 
   const names = user?.fullName?.split(" ");
-  const initials = !names ? undefined : (names[0]?.charAt(0) + (names[1]?.charAt(0) ?? "")).toUpperCase();
+  const initials = !names ? undefined : (names[0].charAt(0) + (names[1]?.charAt(0) ?? "")).toUpperCase();
 
   return (
     <DropdownMenu>

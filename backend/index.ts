@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { approvePrint, getPrintQueue, postPrintQueue } from "./src/print-queue/printQueueService.ts";
+import { getPrintQueue, postPrintQueue } from "./src/print-queue/printQueueService.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
 import { withAuthentication } from "./src/security/withAuthentication.ts";
 import { getUser } from "./src/user/userService.ts";
@@ -19,9 +19,6 @@ serve({
     "/api/print-queue": {
       GET: withLogging(withAuthentication(getPrintQueue)),
       POST: withLogging(withAuthentication(postPrintQueue)),
-    },
-    "/api/print-queue/:uuid/approve": {
-      POST: withLogging(withAuthentication(approvePrint)),
     },
   },
   fetch: (req) => notFoundResponse(`Not found: ${req.url}`),
