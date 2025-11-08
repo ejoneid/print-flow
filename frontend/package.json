@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun dev-server.ts",
-    "dev:auth": "VITE_OVERRIDE_AUTH=false bun dev",
+    "dev:auth": "FRONTEND_OVERRIDE_AUTH=false bun dev",
     "tsc": "tsc --noEmit",
     "build": "tsc -b && FRONTEND_OVERRIDE_AUTH=false bun build ./index.html --outdir ./dist --env inline"
   },
@@ -17,7 +17,6 @@
     "@radix-ui/react-select": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-tooltip": "^1.1.8",
-    "@tailwindcss/vite": "4.1.3",
     "@tanstack/react-query": "5.69.0",
     "bun-plugin-tailwind": "^0.1.2",
     "class-variance-authority": "^0.7.1",
