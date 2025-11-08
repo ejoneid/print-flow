@@ -1,4 +1,4 @@
-import printFlowLogo from "../public/print_flow_logo.svg";
+import printFlowLogo from "@public/print_flow_logo.svg";
 import { UserSwitcher } from "./components/UserSwitcher.tsx";
 import { UserMenu } from "@/components/UserMenu.tsx";
 import { Outlet } from "react-router-dom";
