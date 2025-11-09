@@ -5,5 +5,5 @@ Bun.build({
   outdir: "./dist",
   publicPath: "/",
   env: "inline",
-  plugins: [tailwind]
+  plugins: [tailwind],
 });
