@@ -7,7 +7,7 @@
     "dev": "bun dev-server.ts",
     "dev:auth": "FRONTEND_OVERRIDE_AUTH=false bun dev",
     "tsc": "tsc --noEmit",
-    "build": "tsc -b && FRONTEND_OVERRIDE_AUTH=false bun build ./index.html --outdir ./dist --env inline"
+    "build": "tsc -b && FRONTEND_OVERRIDE_AUTH=false bun build ./index.html --outdir ./dist --public-path / --env inline"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
