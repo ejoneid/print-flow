@@ -1,3 +1,4 @@
+import paceholderImage from "@public/480x380.svg";
 import { CheckCircle, Clock, ExternalLink, Printer, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
         <div className="grid sm:grid-cols-[1fr_2fr] gap-4">
           <div>
             <img
-              src={item.imageUrl ?? "/placeholder.svg"}
+              src={item.imageUrl ?? paceholderImage}
               alt={item.name}
               className="relative rounded-md border max-h-60 max-w-[380px] object-contain"
             />
