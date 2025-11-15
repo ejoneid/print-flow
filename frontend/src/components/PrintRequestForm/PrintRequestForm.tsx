@@ -1,4 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { useForm } from "react-hook-form";
 import { Plus, Trash2 } from "lucide-react";
 
@@ -34,7 +34,7 @@ type PrintRequestFormProps = {
 
 export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormProps) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(printQueueItemSchema),
+    resolver: standardSchemaResolver(printQueueItemSchema),
     defaultValues: {
       name: "",
       modelLink: "",
