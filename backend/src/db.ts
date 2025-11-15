@@ -31,7 +31,7 @@ export function columnsToString<T>(columns: DBColumns<T>, prefix: string): strin
       if (typeof column === "string") {
         return `${prefix}.${column}`;
       }
-      // @ts-ignore
+      // @ts-expect-error
       return `${prefix}.${column.name} AS ${column.alias}`;
     })
     .join(", ");

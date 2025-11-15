@@ -84,12 +84,12 @@ supertokens.init({
             thirdPartyUserId: string;
             email: string;
             isVerified: boolean;
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: no explanation
             oAuthTokens: { [p: string]: any };
             rawUserInfoFromProvider: {
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              // biome-ignore lint/suspicious/noExplicitAny: no explanation
               fromIdTokenPayload?: { [p: string]: any };
-              // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+              // biome-ignore lint/suspicious/noExplicitAny: no explanation
               fromUserInfoAPI?: { [p: string]: any };
             };
             session: SessionContainerInterface | undefined;
@@ -102,12 +102,12 @@ supertokens.init({
                 createdNewRecipeUser: boolean;
                 recipeUserId: RecipeUserId;
                 user: User;
-                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                // biome-ignore lint/suspicious/noExplicitAny: no explanation
                 oAuthTokens: { [p: string]: any };
                 rawUserInfoFromProvider: {
-                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  // biome-ignore lint/suspicious/noExplicitAny: no explanation
                   fromIdTokenPayload?: { [p: string]: any };
-                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                  // biome-ignore lint/suspicious/noExplicitAny: no explanation
                   fromUserInfoAPI?: { [p: string]: any };
                 };
               }
@@ -152,9 +152,9 @@ supertokens.init({
           createNewSession: async (input: {
             userId: string;
             recipeUserId: RecipeUserId;
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: no explanation
             accessTokenPayload?: any;
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            // biome-ignore lint/suspicious/noExplicitAny: no explanation
             sessionDataInDatabase?: any;
             disableAntiCsrf?: boolean;
             tenantId: string;
@@ -194,8 +194,8 @@ app.use((req, res, next) => {
   // Store original methods
   const originalSend = res.send;
   const originalJson = res.json;
-  // @ts-ignore
-  // biome-ignore lint/suspicious/noImplicitAnyLet:
+  // @ts-expect-error
+  // biome-ignore lint/suspicious/noImplicitAnyLet: no explanation
   let responseBody;
 
   res.send = function (body) {
@@ -208,11 +208,10 @@ app.use((req, res, next) => {
     return originalJson.call(this, body);
   };
 
-  // @ts-ignore
-  onFinished(res, (err, res) => {
+  onFinished(res, (_, res) => {
     const duration = Date.now() - startTime;
     logger.info(
-      // @ts-ignore
+      // @ts-expect-error
       `${req.method} ${req.url} - ${res.statusCode} - ${duration}ms - ${responseBody ?? "[No response body.status]"}`,
     );
   });
@@ -227,9 +226,9 @@ app.use(
     credentials: true,
   }),
 );
-// @ts-ignore
+// @ts-expect-error
 app.use(middleware());
-// @ts-ignore
+// @ts-expect-error
 app.use(errorHandler());
 
 app.listen(port, async () => {

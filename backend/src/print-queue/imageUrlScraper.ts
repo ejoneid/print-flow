@@ -2,8 +2,8 @@ import ky from "ky";
 import * as cheerio from "cheerio";
 
 const PRINTABLES_GQL_API = "https://api.printables.com/graphql/";
-const getThingiverseApiUrl = (thingId: string) =>
-  `https://www.thingiverse.com/api/things/${thingId}/images?type=display&size=large`;
+// const getThingiverseApiUrl = (thingId: string) =>
+//   `https://www.thingiverse.com/api/things/${thingId}/images?type=display&size=large`;
 
 export async function getImageUrl(link: string): Promise<string | null> {
   const domain = new URL(link);
@@ -33,7 +33,7 @@ export async function getImageUrl(link: string): Promise<string | null> {
 
 async function getMakerWorldImageUrl(url: string) {
   const html = await ky.get(url).text();
-  const $ = await cheerio.load(html);
+  const $ = cheerio.load(html);
   const $img = $("img");
   return $img["1"].attribs?.src;
 }

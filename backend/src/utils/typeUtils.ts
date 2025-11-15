@@ -1,6 +1,6 @@
 import type { DBColumns } from "../db.ts";
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: no explanation
 export function extractType<T extends Object, U extends Object>(
   obj: T & U,
   columns: DBColumns<T>,
@@ -15,9 +15,9 @@ export function extractType<T extends Object, U extends Object>(
   }
 
   for (const key of keys) {
-    // @ts-ignore
+    // @ts-expect-error
     if (columns.includes(key)) {
-      // @ts-ignore
+      // @ts-expect-error
       result[key] = obj[key];
     }
   }

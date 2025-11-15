@@ -12,11 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { User } from "lucide-react";
 
-type TestUser = {
-  name: string;
-  uuid: string;
-};
-
 export const testUsers = {
   default: {
     name: "user",

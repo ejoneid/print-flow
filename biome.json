@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.5/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -7,25 +7,32 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "**/.biome/*",
-      "**/node_modules/*",
-      ".data/*",
-      ".direnv/*",
-      ".idea/*",
-      "**/dist/*",
-      "frontend/tsconfig.node.json",
-      "frontend/tsconfig.app.json"
+    "includes": [
+      "**",
+      "!**/.biome/**/*",
+      "!**/node_modules/**/*",
+      "!**/.data/**/*",
+      "!**/.direnv/**/*",
+      "!**/.idea/**/*",
+      "!**/dist/**/*",
+      "!**/frontend/tsconfig.node.json",
+      "!**/frontend/tsconfig.app.json",
+      "!**/frontend/src/index.css"
     ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
+    "formatWithErrors": true,
     "lineWidth": 120
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,

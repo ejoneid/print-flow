@@ -102,12 +102,8 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
 
             <div>
               <Label className="block mb-2">Materials</Label>
-              {form.watch("materials").map((_, index) => (
-                <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey:
-                  key={`material-${index}`}
-                  className="flex gap-2 mb-2"
-                >
+              {form.watch("materials").map((material, index) => (
+                <div key={`material-${material.type}-${material.color}`} className="flex gap-2 mb-2">
                   <div className="flex gap-4">
                     <FormField
                       control={form.control}
@@ -146,7 +142,7 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                             <SelectContent>
                               {materialColors.map((color) => (
                                 <SelectItem key={color.name} value={color.name}>
-                                  <span className={clsx(`h-4 w-4 ${color.colorClassName} rounded-full`)} />
+                                  <span className={clsx(`h - 4 w - 4 ${color.colorClassName} rounded - full`)} />
                                   {color.name}
                                 </SelectItem>
                               ))}

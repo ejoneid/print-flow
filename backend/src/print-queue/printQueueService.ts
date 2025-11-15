@@ -1,5 +1,4 @@
 import { type BunRequest, randomUUIDv7 } from "bun";
-import type { PrintStatus } from "shared/browser";
 import { type PrintQueueItemBody, printQueueItemSchema, type PrintQueueItemType } from "shared/browser";
 import { z } from "zod/v4";
 import {
@@ -17,7 +16,7 @@ import { forbiddenResponse } from "../utils/responses.ts";
 import { extractType } from "../utils/typeUtils.ts";
 import { getImageUrl } from "./imageUrlScraper.ts";
 
-export async function getPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
+export async function getPrintQueue(_: BunRequest, authDetails: AuthDetails): Promise<Response> {
   if (!authDetails.permissions.has("read")) {
     return forbiddenResponse("User does not have permission to read print queue");
   }
@@ -39,7 +38,7 @@ export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails):
   const body = printQueueItemSchema.parse(await req.json());
   const imageUrl = await getImageUrl(body.modelLink);
   console.log(imageUrl);
-  await insertTransaction(body, imageUrl, authDetails.userUuid);
+  insertTransaction(body, imageUrl, authDetails.userUuid);
   return new Response(null, { status: 204 });
 }
 
@@ -51,7 +50,7 @@ export async function approvePrint(
     return forbiddenResponse("User does not have permission to approve print");
   }
   const printUuid = z.uuid().parse(req.params.uuid);
-  const result = approvePrintStatement.run({
+  approvePrintStatement.run({
     uuid: printUuid,
     status_updated_by: authDetails.userUuid,
     // status_updated_at: new Date(),
@@ -102,7 +101,7 @@ const insertMaterialStatement = db.query(
   "INSERT INTO material (uuid, print_queue_uuid, type, color) VALUES ($uuid, $print_queue_uuid, $type, $color) RETURNING *",
 );
 
-const APPROVED_STATUS: PrintStatus = "approved";
+// const APPROVED_STATUS: PrintStatus = "approved";
 const approvePrintStatement = db.query(
   "UPDATE print_queue SET status = 'approved', status_updated_at = $status_updated_at, status_updated_by = $status_updated_by WHERE uuid = $uuid AND status != 'approved'",
 );

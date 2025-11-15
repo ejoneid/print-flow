@@ -1,12 +1,11 @@
-import type { AuthDetails } from "../security/withAuthentication.ts";
 import type { BunRequest } from "bun";
 import type { PrintFlowUser, UserMetaData } from "shared/browser";
 import { logger } from "shared/node";
-import { TEST_USERS } from "./testUsers.ts";
-import { getUserMetadata } from "supertokens-node/recipe/usermetadata";
 import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
-import UserMetadata from "supertokens-node/recipe/usermetadata";
+import UserMetadata, { getUserMetadata } from "supertokens-node/recipe/usermetadata";
+import type { AuthDetails } from "../security/withAuthentication.ts";
+import { TEST_USERS } from "./testUsers.ts";
 
 if (process.env.ALLOW_AUTH_OVERRIDE !== "true") {
   supertokens.init({
@@ -23,7 +22,7 @@ if (process.env.ALLOW_AUTH_OVERRIDE !== "true") {
   });
 }
 
-export const getUser = (req: BunRequest, authDetails: AuthDetails): Response => {
+export const getUser = (_: BunRequest, authDetails: AuthDetails): Response => {
   return Response.json({
     userUuid: authDetails.userUuid,
     fullName: authDetails.fullName,

@@ -104,11 +104,11 @@ const client = jwksClient({
   jwksUri: process.env.JWKS_URI!,
 });
 
-// @ts-ignore
+// @ts-expect-error
 const getKey = (header, callback) => {
   client.getSigningKey(header.kid, (err, key) => {
     if (err) return callback(err);
-    // @ts-ignore
+    // @ts-expect-error
     const signingKey = key?.publicKey ?? key?.rsaPublicKey;
     callback(null, signingKey);
   });
