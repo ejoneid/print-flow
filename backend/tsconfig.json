@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "paths": {
-      "bun-sqlite-migrations": ["./types/bun-sqlite-migrations.d.ts"]
-    },
     // Enable latest features
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",

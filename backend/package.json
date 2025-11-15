@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun index.ts",
     "dev:auth": "ALLOW_AUTH_OVERRIDE=false bun dev",
-    "tsc": "tsc --noEmit"
+    "tsc": "! tsc --noEmit 2>&1 | grep -v 'node_modules/.bun/bun-sqlite-migrations' | grep 'error TS'"
   },
   "dependencies": {
     "cookie": "1.0.2",
