@@ -1,0 +1,3 @@
+bun lint:fix
+bun tsc
+bun format
