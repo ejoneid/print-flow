@@ -227,7 +227,9 @@ app.use(
     credentials: true,
   }),
 );
+// @ts-ignore
 app.use(middleware());
+// @ts-ignore
 app.use(errorHandler());
 
 app.listen(port, async () => {

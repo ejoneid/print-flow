@@ -1,5 +1,5 @@
 {
-  "name": "print-flow-backend",
+  "name": "backend",
   "module": "index.ts",
   "type": "module",
   "private": true,
@@ -18,6 +18,9 @@
     "shared": "workspace:*",
     "cheerio": "^1.0.0",
     "ky": "catalog:"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "9.0.10"
   },
   "peerDependencies": {
     "typescript": "^5"
