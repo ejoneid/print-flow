@@ -16,6 +16,7 @@ import { queryClient } from "./queryClient.ts";
 import { UserContextProvider } from "./hooks/useUser.tsx";
 import type { ReactNode } from "react";
 import { RequestPage } from "@/pages/Request.tsx";
+import AdminPage from "./pages/Admin.tsx";
 
 if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
@@ -78,6 +79,7 @@ const Application = () => (
             >
               <Route index element={<HomePage />} />
               <Route path="request" element={<RequestPage />} />
+              <Route path="admin" element={<AdminPage />} />
             </Route>
           </Routes>
         </BrowserRouter>
