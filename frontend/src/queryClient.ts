@@ -6,6 +6,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       placeholderData: keepPreviousData,
+      staleTime: 1000 * 60 * 1,
     },
   },
   queryCache: new QueryCache(),
