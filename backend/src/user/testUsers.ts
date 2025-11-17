@@ -17,4 +17,12 @@ export const TEST_USERS: Record<UUID, AuthDetails> = {
     roles: new Set(["ADMIN", "USER"]),
     permissions: new Set(["read", "write", "request_print", "approve_print"]),
   },
+  guestUserUuid: {
+    userUuid: "guestUserUuid",
+    fullName: "Guest User",
+    email: "guest@example.com",
+    avatar: undefined,
+    roles: new Set(),
+    permissions: new Set(),
+  },
 };

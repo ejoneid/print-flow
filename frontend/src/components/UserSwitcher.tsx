@@ -21,6 +21,10 @@ export const testUsers = {
     name: "admin",
     uuid: "adminUserUuid",
   },
+  guest: {
+    name: "guest",
+    uuid: "guestUserUuid",
+  },
 } as const;
 
 export let selectedUserUuid = localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
