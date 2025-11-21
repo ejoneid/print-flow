@@ -1,17 +1,14 @@
-import { useState } from "react";
-import { Trash2, ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -20,6 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getFirstAndLastInitials } from "@/utils/stringUtils";
+import { ChevronLeft, ChevronRight, Plus, Trash2, X } from "lucide-react";
+import { useState } from "react";
 
 type UserRole = "admin" | "moderator" | "user";
 
@@ -65,7 +65,7 @@ const mockUsers: User[] = [
     id: "4",
     name: "Sam Wilson",
     email: "sam@example.com",
-    roles: ["user"],
+    roles: [],
     joinDate: "2023-04-05",
     status: "inactive",
     avatar: "/placeholder.svg",
@@ -106,10 +106,52 @@ const mockUsers: User[] = [
     status: "active",
     avatar: "/placeholder.svg",
   },
+  {
+    id: "9",
+    name: "Emily Davis",
+    email: "emily@example.com",
+    roles: ["moderator"],
+    joinDate: "2023-09-28",
+    status: "active",
+    avatar: "/placeholder.svg",
+  },
+  {
+    id: "10",
+    name: "Daniel Kim",
+    email: "daniel@example.com",
+    roles: ["user"],
+    joinDate: "2023-10-15",
+    status: "active",
+    avatar: "/placeholder.svg",
+  },
+  {
+    id: "11",
+    name: "Sophia Chen",
+    email: "sophia@example.com",
+    roles: ["moderator"],
+    joinDate: "2023-11-05",
+    status: "active",
+    avatar: "/placeholder.svg",
+  },
+  {
+    id: "12",
+    name: "Michael Johnson",
+    email: "michael@example.com",
+    roles: ["user"],
+    joinDate: "2023-12-10",
+    status: "active",
+    avatar: "/placeholder.svg",
+  },
 ];
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 10;
 const AVAILABLE_ROLES: UserRole[] = ["user", "moderator", "admin"];
+
+const roleColors: Record<UserRole, string> = {
+  admin: "bg-red-100 text-red-800",
+  moderator: "bg-purple-100 text-purple-800",
+  user: "bg-blue-100 text-blue-800",
+};
 
 export function UserTable() {
   const [users, setUsers] = useState<User[]>(mockUsers);
@@ -132,27 +174,6 @@ export function UserTable() {
     if (paginatedUsers.length === 1 && currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
-  };
-
-  const getRoleColor = (role: UserRole) => {
-    switch (role) {
-      case "admin":
-        return "bg-red-100 text-red-800";
-      case "moderator":
-        return "bg-purple-100 text-purple-800";
-      case "user":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
   };
 
   return (
@@ -195,7 +216,7 @@ export function UserTable() {
                               alt={user.name}
                             />
                             <AvatarFallback className="text-xs">
-                              {getInitials(user.name)}
+                              {getFirstAndLastInitials(user.name)}
                             </AvatarFallback>
                           </Avatar>
                           <p className="font-medium text-sm">{user.name}</p>
@@ -207,22 +228,22 @@ export function UserTable() {
                           {user.roles.map((role) => (
                             <Badge
                               variant="outline"
-                              className={`${getRoleColor(role)} flex items-center gap-1 pr-1`}
+                              className={`${roleColors[role]} flex items-center gap-0 pr-0`}
                               key={role}
                             >
                               {role}
-                              <button
+                              <Button
                                 onClick={() => {
                                   updateUserRoles(
                                     user.id,
                                     user.roles.filter((r) => r !== role),
                                   );
                                 }}
-                                className="hover:opacity-70 transition-opacity ml-1"
+                                className="h-1 w-1 bg-inherit hover:bg-inherit hover:cursor-pointer hover:opacity-70 text-inherit"
                                 title="Remove role"
                               >
-                                <X className="h-3 w-3" />
-                              </button>
+                                <X className="p-0" />
+                              </Button>
                             </Badge>
                           ))}
                           <AddRoleDropdown
@@ -288,47 +309,6 @@ export function UserTable() {
         </div>
       </CardContent>
     </Card>
-  );
-}
-
-type RoleDropdownProps = {
-  user: User;
-  onUpdateRoles: (userId: string, roles: UserRole[]) => void;
-};
-
-function RoleDropdown({ user, onUpdateRoles }: RoleDropdownProps) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button size="sm" variant="outline">
-          <Plus className="h-4 w-4 mr-1" />
-          Roles
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        <div className="px-2 py-1.5 text-sm font-semibold">Assign Roles</div>
-        <DropdownMenuSeparator />
-        {AVAILABLE_ROLES.map((role) => (
-          <DropdownMenuCheckboxItem
-            key={role}
-            checked={user.roles.includes(role)}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                onUpdateRoles(user.id, [...user.roles, role]);
-              } else {
-                onUpdateRoles(
-                  user.id,
-                  user.roles.filter((r) => r !== role),
-                );
-              }
-            }}
-            className="cursor-pointer"
-          >
-            <span className="capitalize">{role}</span>
-          </DropdownMenuCheckboxItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 
