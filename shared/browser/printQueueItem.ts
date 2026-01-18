@@ -25,10 +25,27 @@ export type Material = {
   color: string;
 };
 
-export type PrintStatus = "pending" | "approved" | "printing" | "completed" | "rejected";
+export type PrintStatus =
+  | "pending"
+  | "approved"
+  | "printing"
+  | "completed"
+  | "rejected";
 
 export type PrintQueueItemType = {
-  uuid: string;
+  uuid: UUID;
+  name: string;
+  requester: UUID;
+  modelLink: string;
+  materials: Material[];
+  status: PrintStatus;
+  requestDate: string;
+  completionDate: string | null;
+  imageUrl: string | null;
+};
+
+export type PrintQueueItemTypeDto = {
+  uuid: UUID;
   name: string;
   requester: string;
   modelLink: string;

@@ -5,7 +5,7 @@
 </p>
 
 ### Environments
-Dev: https://print.dev.joneid.no
+Dev: https://print.dev.ejoneid.dev
 
 ## ⚠️ Requirements
 

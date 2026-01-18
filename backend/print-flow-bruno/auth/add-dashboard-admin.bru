@@ -1,0 +1,29 @@
+meta {
+  name: add-dashboard-admin
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{supertokensCoreUrl}}/recipe/dashboard/user
+  body: json
+  auth: inherit
+}
+
+headers {
+  rid: dashboard
+  api-key: {{coreApiKey}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": "test@example.com",
+    "password": "testtest123"
+  }
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

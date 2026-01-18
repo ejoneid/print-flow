@@ -1,0 +1,38 @@
+meta {
+  name: signin
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{authUrl}}/auth/signin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "formFields": [
+          {
+              "id": "email",
+              "value": "test3@example.com"
+          },
+          {
+              "id": "password",
+              "value": "testtest123"
+          }
+      ],
+      "shouldTryLinkingWithSessionUser": false
+  }
+}
+
+vars:pre-request {
+  ~baseUrl: {{baseUrl}}
+  ~authUrl: {{authUrl}}
+}
+
+script:post-response {
+  const jar = bru.cookies.jar();
+  jar.setCookie('{{baseUrl}}', "sAccessToken", res.headers["st-access-token"])
+  jar.setCookie('{{baseUrl}}', "sRefreshToken", res.headers["st-refresh-token"])
+}

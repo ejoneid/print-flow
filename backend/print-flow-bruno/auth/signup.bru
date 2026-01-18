@@ -1,0 +1,31 @@
+meta {
+  name: signup
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{authUrl}}/auth/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "formFields": [
+          {
+              "id": "email",
+              "value": "test3@example.com"
+          },
+          {
+              "id": "password",
+              "value": "testtest123"
+          },
+          {
+              "id": "fullName",
+              "value": "Tester2 Testington"
+          }
+      ],
+      "shouldTryLinkingWithSessionUser": false
+  }
+}

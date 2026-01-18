@@ -1,11 +1,11 @@
 meta {
-  name: auth-example
+  name: user
   type: http
   seq: 5
 }
 
 get {
-  url: http://localhost:8000/example
+  url: {{baseUrl}}/api/self
   body: none
   auth: none
 }
