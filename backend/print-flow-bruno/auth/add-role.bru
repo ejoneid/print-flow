@@ -1,0 +1,27 @@
+meta {
+  name: add-role
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{supertokensCoreUrl}}/appid-public/public/recipe/user/role
+  body: json
+  auth: inherit
+}
+
+headers {
+  api-key: {{coreApiKey}}
+}
+
+body:json {
+  {
+    "userId": "e5dc8639-0c7e-4698-8c85-020f62cf318d",
+    "role": "ADMIN"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

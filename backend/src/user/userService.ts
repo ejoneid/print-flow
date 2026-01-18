@@ -1,11 +1,15 @@
-import type { BunRequest } from "bun";
-import type { PrintFlowUser, UserMetaData } from "shared/browser";
-import { logger } from "shared/node";
+import type {
+  PrintFlowUserInfo,
+  UserMetaData,
+  UserUpdate,
+} from "shared/browser";
 import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
-import UserMetadata, { getUserMetadata } from "supertokens-node/recipe/usermetadata";
+import UserMetadata from "supertokens-node/recipe/usermetadata";
+import UserRoles from "supertokens-node/recipe/userroles";
 import type { AuthDetails } from "../security/withAuthentication.ts";
-import { TEST_USERS } from "./testUsers.ts";
+import { UserServiceMock } from "./userServiceMock.ts";
+import { UserServiceSupertokens } from "./userServiceSupertokens.ts";
 
 if (process.env.ALLOW_AUTH_OVERRIDE !== "true") {
   supertokens.init({
@@ -18,46 +22,23 @@ if (process.env.ALLOW_AUTH_OVERRIDE !== "true") {
       apiDomain: "http://localhost:8000",
       websiteDomain: "http://localhost:3000",
     },
-    recipeList: [Session.init(), UserMetadata.init()],
+    recipeList: [Session.init(), UserMetadata.init(), UserRoles.init()],
   });
 }
 
-export const getUser = (_: BunRequest, authDetails: AuthDetails): Response => {
-  return Response.json({
-    userUuid: authDetails.userUuid,
-    fullName: authDetails.fullName,
-    email: authDetails.email,
-    avatar: authDetails.avatar,
-    roles: Array.from(authDetails.roles),
-    permissions: Array.from(authDetails.permissions),
-  } satisfies PrintFlowUser);
-};
-
-export async function getUserMetaDataById(userId: UUID): Promise<UserMetaData> {
-  if (process.env.ALLOW_AUTH_OVERRIDE === "true") {
-    const user = TEST_USERS[userId];
-    return {
-      fullName: user.fullName,
-      avatar: user.avatar,
-    };
-  }
-  return (await getUserMetadata(userId)).metadata;
+export interface UserService {
+  getUser: (userUuid: UUID) => Promise<PrintFlowUserInfo | undefined>;
+  getUserMetaDataById: (userUuid: UUID) => Promise<UserMetaData>;
+  getUserMetaDataByIds: (userUuids: UUID[]) => Promise<Map<UUID, UserMetaData>>;
+  getUsers: (authDetails: AuthDetails) => Promise<PrintFlowUserInfo[]>;
+  updateUser: (
+    userUuid: UUID,
+    update: UserUpdate,
+    authDetails: AuthDetails,
+  ) => Promise<PrintFlowUserInfo>;
 }
 
-export async function getUserMetaDataByIds(userIds: UUID[]) {
-  const uniqueUserIds = Array.from(new Set(userIds));
-  const metadataPromises: Promise<[UUID, UserMetaData]>[] = uniqueUserIds.map(
-    async (userId): Promise<[UUID, UserMetaData]> => {
-      try {
-        const metadata = await getUserMetaDataById(userId);
-        return [userId, metadata];
-      } catch (error) {
-        logger.error(`Error fetching metadata for user ${userId}:`, error);
-        throw error;
-      }
-    },
-  );
-
-  const results = await Promise.all(metadataPromises);
-  return new Map(results);
-}
+export const userService: UserService =
+  process.env.ALLOW_AUTH_OVERRIDE === "true"
+    ? new UserServiceMock()
+    : new UserServiceSupertokens();

@@ -1,0 +1,27 @@
+meta {
+  name: user_patch
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/api/users/:uuid
+  body: json
+  auth: inherit
+}
+
+params:path {
+  uuid: b502a7c7-777d-48eb-b72a-d2e0f41e3b63
+}
+
+body:json {
+  {
+    "roles": [],
+    "email": "main@example.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
