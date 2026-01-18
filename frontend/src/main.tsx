@@ -14,9 +14,10 @@ import { ThirdPartyPreBuiltUI } from "supertokens-auth-react/recipe/thirdparty/p
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./queryClient.ts";
 import { UserContextProvider } from "./hooks/useUser.tsx";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { RequestPage } from "@/pages/Request.tsx";
 import AdminPage from "./pages/Admin.tsx";
+import { LoadingScreen } from "@/components/LoadingScreen.tsx";
 
 if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
@@ -65,25 +66,27 @@ const ConditionalSessionAuth = ({ children }: { children: ReactNode }) =>
 const Application = () => (
   <ConditionalSuperTokensWrapper>
     <QueryClientProvider client={queryClient}>
-      <UserContextProvider>
-        <BrowserRouter>
-          <Routes>
-            {ConditionalSuperTokensRoutes()}
-            <Route
-              path="/"
-              element={
-                <ConditionalSessionAuth>
-                  <App />
-                </ConditionalSessionAuth>
-              }
-            >
-              <Route index element={<HomePage />} />
-              <Route path="request" element={<RequestPage />} />
-              <Route path="admin" element={<AdminPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </UserContextProvider>
+      <Suspense fallback={<LoadingScreen />}>
+        <UserContextProvider>
+          <BrowserRouter>
+            <Routes>
+              {ConditionalSuperTokensRoutes()}
+              <Route
+                path="/"
+                element={
+                  <ConditionalSessionAuth>
+                    <App />
+                  </ConditionalSessionAuth>
+                }
+              >
+                <Route index element={<HomePage />} />
+                <Route path="request" element={<RequestPage />} />
+                <Route path="admin" element={<AdminPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </UserContextProvider>
+      </Suspense>
     </QueryClientProvider>
   </ConditionalSuperTokensWrapper>
 );

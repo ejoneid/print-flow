@@ -1,11 +1,11 @@
 import { createContext, type ReactElement, useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { kyClient } from "../queryClient.ts";
 import { type PrintFlowUser, USER_PERMISSIONS, type UserPermission } from "shared/browser";
 
 const UserContext = createContext<PrintFlowUser | undefined>(undefined);
 export const useUser = () => {
-  return useContext(UserContext);
+  return useContext(UserContext)!;
 };
 export const useUserPermissions = () => {
   const user = useUser();
@@ -19,7 +19,7 @@ export const useUserPermissions = () => {
 };
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["user"],
     queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
   });
