@@ -10,7 +10,9 @@ function App() {
       <header>
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex gap-4 items-center">
-            <img src={printFlowLogo} className="h-20" alt="Print flow logo" />
+            <a href="/">
+              <img src={printFlowLogo} className="h-20" alt="Print flow logo" />
+            </a>
             <h1 className="lg:text-5xl text-3xl font-bold mb-2">Print Flow</h1>
           </div>
           <span className="mr-1">
