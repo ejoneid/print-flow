@@ -1,9 +1,7 @@
 import type { PrintFlowUser, PrintFlowUserInfo } from "shared/browser";
 import type { AuthDetails } from "../security/withAuthentication";
 
-export function authDetailsToUserInfo(
-  authDetails: AuthDetails,
-): PrintFlowUserInfo {
+export function authDetailsToUserInfo(authDetails: AuthDetails): PrintFlowUserInfo {
   return {
     ...authDetails,
     roles: Array.from(authDetails.roles),

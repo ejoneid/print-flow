@@ -1,20 +1,14 @@
 import cors from "cors";
 import express from "express";
 import onFinished from "on-finished";
-import supertokens, {
-  getUser,
-  type RecipeUserId,
-  type User,
-} from "supertokens-node";
+import supertokens, { getUser, type RecipeUserId, type User } from "supertokens-node";
 import { errorHandler, middleware } from "supertokens-node/framework/express";
 import Dashboard from "supertokens-node/recipe/dashboard";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
 import UserRoles from "supertokens-node/recipe/userroles";
-import UserMetadata, {
-  getUserMetadata,
-} from "supertokens-node/recipe/usermetadata";
+import UserMetadata, { getUserMetadata } from "supertokens-node/recipe/usermetadata";
 import { logger } from "shared/node";
 import { initUserRoles } from "./src/roles.ts";
 import type { SessionContainerInterface } from "supertokens-node/lib/build/recipe/session/types";
@@ -51,11 +45,8 @@ supertokens.init({
             const response = await originalImplementation.signUpPOST(input);
 
             if (response.status === "OK") {
-              const fullName = input.formFields.find(
-                (field) => field.id === "fullName",
-              )?.value;
-              if (!fullName || typeof fullName !== "string")
-                throw Error('Invalid value for "fullName"');
+              const fullName = input.formFields.find((field) => field.id === "fullName")?.value;
+              if (!fullName || typeof fullName !== "string") throw Error('Invalid value for "fullName"');
               await UserMetadata.updateUserMetadata(response.user.id, {
                 fullName,
               });
@@ -134,14 +125,11 @@ supertokens.init({
 
             if (response.status === "OK" && input.thirdPartyId === "google") {
               try {
-                const googleResponse = await fetch(
-                  "https://www.googleapis.com/oauth2/v2/userinfo",
-                  {
-                    headers: {
-                      Authorization: `Bearer ${input.oAuthTokens.access_token}`,
-                    },
+                const googleResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+                  headers: {
+                    Authorization: `Bearer ${input.oAuthTokens.access_token}`,
                   },
-                ).then((res) => res.json());
+                }).then((res) => res.json());
 
                 await UserMetadata.updateUserMetadata(response.user.id, {
                   fullName: googleResponse.name as string,

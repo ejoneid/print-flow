@@ -1,17 +1,10 @@
 import { serve } from "bun";
-import {
-  approvePrint,
-  getPrintQueue,
-  postPrintQueue,
-} from "./src/print-queue/printQueueService.ts";
+import { approvePrint, getPrintQueue, postPrintQueue } from "./src/print-queue/printQueueService.ts";
 import { withAuthentication } from "./src/security/withAuthentication.ts";
 import { userService } from "./src/user/userService.ts";
 import { jsonResponseOr404 } from "./src/utils/jsonResponseOr404.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
-import {
-  internalServerErrorResponse,
-  notFoundResponse,
-} from "./src/utils/responses.ts";
+import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 import { userUpdateSchema, type UserUpdate } from "shared/browser/user.ts";
 import { authDetailsToUser } from "./src/user/mappers.ts";
 
@@ -24,16 +17,10 @@ serve({
       GET: () => new Response("OK"),
     },
     "/api/self": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404((_, authDetails) => authDetailsToUser(authDetails)),
-        ),
-      ),
+      GET: withLogging(withAuthentication(jsonResponseOr404((_, authDetails) => authDetailsToUser(authDetails)))),
     },
     "/api/users": {
-      GET: withLogging(
-        withAuthentication(jsonResponseOr404((_, authDetails) => userService.getUsers(authDetails))),
-      ),
+      GET: withLogging(withAuthentication(jsonResponseOr404((_, authDetails) => userService.getUsers(authDetails)))),
     },
     "/api/users/:uuid": {
       PATCH: withLogging(
@@ -55,8 +42,7 @@ serve({
     },
   },
   fetch: (req) => notFoundResponse(`Not found: ${req.url}`),
-  error: (error) =>
-    internalServerErrorResponse(`Internal Error: ${error.message}`),
+  error: (error) => internalServerErrorResponse(`Internal Error: ${error.message}`),
 });
 
 console.log(`Server started on port ${port}`);

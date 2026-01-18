@@ -1,23 +1,9 @@
-import type {
-  PrintFlowUserInfo,
-  UpdateableUserField,
-  UserMetaData,
-  UserRole,
-  UserUpdate,
-} from "shared/browser";
+import type { PrintFlowUserInfo, UpdateableUserField, UserMetaData, UserRole, UserUpdate } from "shared/browser";
 import { logger } from "shared/node";
 import { getUser, getUsersNewestFirst } from "supertokens-node";
 import { getUserMetadata } from "supertokens-node/recipe/usermetadata";
-import {
-  addRoleToUser,
-  getRolesForUser,
-  removeUserRole,
-} from "supertokens-node/recipe/userroles";
-import {
-  NotFoundError,
-  NotImplementedError,
-  UnauthorizedError,
-} from "../errors";
+import { addRoleToUser, getRolesForUser, removeUserRole } from "supertokens-node/recipe/userroles";
+import { NotFoundError, NotImplementedError, UnauthorizedError } from "../errors";
 import type { AuthDetails } from "../security/withAuthentication";
 import { getKeys } from "../utils/objectUtils";
 import { isUserRoles } from "../utils/typeGuards";
@@ -31,9 +17,7 @@ export class UserServiceSupertokens implements UserService {
     const user = await getUser(userUuid);
     if (!user) return undefined;
     const userMetadata = await this.getUserMetaDataById(user.id as UUID);
-    const userRoles = (await this.getUserRolesByIds([user.id as UUID])).get(
-      user.id as UUID,
-    );
+    const userRoles = (await this.getUserRolesByIds([user.id as UUID])).get(user.id as UUID);
     return {
       userUuid: user.id as UUID,
       fullName: userMetadata.fullName,
@@ -49,9 +33,7 @@ export class UserServiceSupertokens implements UserService {
 
   getUsers = async (authDetails: AuthDetails): Promise<PrintFlowUserInfo[]> => {
     if (!authDetails.permissions.has("view_users"))
-      throw new UnauthorizedError(
-        `user ${authDetails.userUuid} does not have permission to see all users`,
-      );
+      throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
     const authResponse = await getUsersNewestFirst({
       tenantId: "public",
       limit: 100,
@@ -92,8 +74,7 @@ export class UserServiceSupertokens implements UserService {
       async (userId): Promise<[UUID, UserRole[]]> => {
         try {
           const rolesRequest = await getRolesForUser(TENANT, userId);
-          if (!isUserRoles(rolesRequest.roles))
-            throw new Error("Invalid roles");
+          if (!isUserRoles(rolesRequest.roles)) throw new Error("Invalid roles");
           return [userId, rolesRequest.roles];
         } catch (error) {
           logger.error(`Error fetching roles for user ${userId}:`, error);
@@ -106,11 +87,7 @@ export class UserServiceSupertokens implements UserService {
     return new Map(results);
   };
 
-  updateUser = async (
-    userUuid: UUID,
-    update: UserUpdate,
-    authDetails: AuthDetails,
-  ) => {
+  updateUser = async (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => {
     const permittedFields = getPermittedFields(userUuid, authDetails);
     console.log("permittedFields:", permittedFields);
     const fieldsToUpdate = getKeys(update);
@@ -150,26 +127,15 @@ export class UserServiceSupertokens implements UserService {
       case "roles": {
         if (!convertTypeToRoles(value)) return;
         const rolesToAdd = value.filter((role) => !user.roles.includes(role));
-        const rolesToRemove = user.roles.filter(
-          (role) => !value.includes(role),
-        );
+        const rolesToRemove = user.roles.filter((role) => !value.includes(role));
         console.log("rolesToRemove:", rolesToRemove);
         console.log("rolesToAdd:", rolesToAdd);
-        const rolesToAddResults = rolesToAdd.map((role) =>
-          addRoleToUser(TENANT, user.userUuid, role),
-        );
-        const rolesToRemoveResults = rolesToRemove.map((role) =>
-          removeUserRole(TENANT, user.userUuid, role),
-        );
-        const results = await Promise.all([
-          ...rolesToAddResults,
-          ...rolesToRemoveResults,
-        ]);
+        const rolesToAddResults = rolesToAdd.map((role) => addRoleToUser(TENANT, user.userUuid, role));
+        const rolesToRemoveResults = rolesToRemove.map((role) => removeUserRole(TENANT, user.userUuid, role));
+        const results = await Promise.all([...rolesToAddResults, ...rolesToRemoveResults]);
         const failures = results.filter((result) => result.status !== "OK");
         if (failures.length > 0) {
-          throw new Error(
-            `Failed to update roles for user ${user.userUuid} to ${value}`,
-          );
+          throw new Error(`Failed to update roles for user ${user.userUuid} to ${value}`);
         }
         break;
       }
@@ -177,6 +143,6 @@ export class UserServiceSupertokens implements UserService {
   };
 }
 
-function convertTypeToRoles(roles: any): roles is PrintFlowUserInfo["roles"] {
+function convertTypeToRoles(roles: unknown): roles is PrintFlowUserInfo["roles"] {
   return true;
 }

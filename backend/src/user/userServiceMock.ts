@@ -1,9 +1,4 @@
-import type {
-  PrintFlowUser,
-  PrintFlowUserInfo,
-  UserMetaData,
-  UserUpdate,
-} from "shared/browser";
+import type { PrintFlowUser, PrintFlowUserInfo, UserMetaData, UserUpdate } from "shared/browser";
 import { UnauthorizedError } from "../errors";
 import type { AuthDetails } from "../security/withAuthentication";
 import { getKeys } from "../utils/objectUtils";
@@ -25,9 +20,7 @@ export class UserServiceMock implements UserService {
     });
   };
 
-  getUserMetaDataByIds = (
-    userUuids: UUID[],
-  ): Promise<Map<UUID, UserMetaData>> => {
+  getUserMetaDataByIds = (userUuids: UUID[]): Promise<Map<UUID, UserMetaData>> => {
     const userMetaDataMap = new Map<UUID, UserMetaData>();
     for (const userId of userUuids) {
       const user = TEST_USERS[userId];
@@ -41,9 +34,7 @@ export class UserServiceMock implements UserService {
 
   getUsers = (authDetails: AuthDetails): Promise<PrintFlowUserInfo[]> => {
     if (!authDetails.permissions.has("view_users"))
-      throw new UnauthorizedError(
-        `user ${authDetails.userUuid} does not have permission to see all users`,
-      );
+      throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
 
     const users = Object.values(TEST_USERS);
     return Promise.resolve(
@@ -58,11 +49,7 @@ export class UserServiceMock implements UserService {
     );
   };
 
-  updateUser = (
-    userUuid: UUID,
-    update: UserUpdate,
-    authDetails: AuthDetails,
-  ) => {
+  updateUser = (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => {
     const permittedFields = getPermittedFields(userUuid, authDetails);
     const fieldsToUpdate = getKeys(update);
 

@@ -9,26 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { kyClient, queryClient } from "@/queryClient";
 import { getFirstAndLastInitials } from "@/utils/stringUtils";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import type { UUID } from "crypto";
-import { ChevronLeft, ChevronRight, Plus, Trash2, X } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight, Plus, X } from "lucide-react";
 import { useState } from "react";
-import {
-  USER_ROLES,
-  type PrintFlowUserInfo,
-  type UserRole,
-  type UserUpdate,
-} from "shared/browser";
+import { USER_ROLES, type PrintFlowUserInfo, type UserRole, type UserUpdate } from "shared/browser";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,13 +30,7 @@ export function UserTable() {
     queryFn: () => kyClient("/api/users").json<PrintFlowUserInfo[]>(),
   });
   const { mutate } = useMutation({
-    mutationFn: ({
-      userUuid,
-      userUpdate,
-    }: {
-      userUuid: UUID;
-      userUpdate: UserUpdate;
-    }) =>
+    mutationFn: ({ userUuid, userUpdate }: { userUuid: UUID; userUpdate: UserUpdate }) =>
       kyClient(`/api/users/${userUuid}`, {
         method: "PATCH",
         body: JSON.stringify(userUpdate),
@@ -57,9 +38,7 @@ export function UserTable() {
     onSuccess: (data) => {
       queryClient.setQueryData<PrintFlowUserInfo[]>(["users"], (oldData) => {
         if (!oldData) return [data];
-        return oldData.map((user) =>
-          user.userUuid === data.userUuid ? data : user,
-        );
+        return oldData.map((user) => (user.userUuid === data.userUuid ? data : user));
       });
     },
   });
@@ -92,10 +71,7 @@ export function UserTable() {
               <TableBody>
                 {paginatedUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="text-center py-8 text-muted-foreground"
-                    >
+                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                       No users found
                     </TableCell>
                   </TableRow>
@@ -105,10 +81,7 @@ export function UserTable() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar className="h-8 w-8">
-                            <AvatarImage
-                              src={user.avatar}
-                              alt={user.fullName}
-                            />
+                            <AvatarImage src={user.avatar} alt={user.fullName} />
                             <AvatarFallback className="text-xs">
                               {getFirstAndLastInitials(user.fullName)}
                             </AvatarFallback>
@@ -140,10 +113,7 @@ export function UserTable() {
                               </Button>
                             </Badge>
                           ))}
-                          <AddRoleDropdown
-                            user={user}
-                            onUpdateRoles={updateUserRoles}
-                          />
+                          <AddRoleDropdown user={user} onUpdateRoles={updateUserRoles} />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -171,9 +141,7 @@ export function UserTable() {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() =>
-                    setCurrentPage(Math.min(totalPages, currentPage + 1))
-                  }
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -193,9 +161,7 @@ type AddRoleDropdownProps = {
 };
 
 function AddRoleDropdown({ user, onUpdateRoles }: AddRoleDropdownProps) {
-  const availableRolesToAdd = USER_ROLES.filter(
-    (role) => !user.roles.includes(role),
-  );
+  const availableRolesToAdd = USER_ROLES.filter((role) => !user.roles.includes(role));
 
   if (availableRolesToAdd.length === 0) {
     return null;
@@ -204,12 +170,7 @@ function AddRoleDropdown({ user, onUpdateRoles }: AddRoleDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          className="h-6 w-6 p-0"
-          title="Add role"
-        >
+        <Button size="sm" variant="outline" className="h-6 w-6 p-0" title="Add role">
           <Plus className="h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>

@@ -1,8 +1,4 @@
-import type {
-  PrintFlowUserInfo,
-  UserMetaData,
-  UserUpdate,
-} from "shared/browser";
+import type { PrintFlowUserInfo, UserMetaData, UserUpdate } from "shared/browser";
 import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
 import UserMetadata from "supertokens-node/recipe/usermetadata";
@@ -31,14 +27,8 @@ export interface UserService {
   getUserMetaDataById: (userUuid: UUID) => Promise<UserMetaData>;
   getUserMetaDataByIds: (userUuids: UUID[]) => Promise<Map<UUID, UserMetaData>>;
   getUsers: (authDetails: AuthDetails) => Promise<PrintFlowUserInfo[]>;
-  updateUser: (
-    userUuid: UUID,
-    update: UserUpdate,
-    authDetails: AuthDetails,
-  ) => Promise<PrintFlowUserInfo>;
+  updateUser: (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => Promise<PrintFlowUserInfo>;
 }
 
 export const userService: UserService =
-  process.env.ALLOW_AUTH_OVERRIDE === "true"
-    ? new UserServiceMock()
-    : new UserServiceSupertokens();
+  process.env.ALLOW_AUTH_OVERRIDE === "true" ? new UserServiceMock() : new UserServiceSupertokens();

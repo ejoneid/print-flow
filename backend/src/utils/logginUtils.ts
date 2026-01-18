@@ -1,9 +1,7 @@
 import { logger } from "shared/node";
 import type { BunRequest } from "bun";
 
-export type RequestHandler<TRequest extends BunRequest> = (
-  req: TRequest,
-) => Response | Promise<Response>;
+export type RequestHandler<TRequest extends BunRequest> = (req: TRequest) => Response | Promise<Response>;
 
 export const withLogging = <TRequest extends BunRequest>(
   handler: RequestHandler<TRequest>,

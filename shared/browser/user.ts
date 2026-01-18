@@ -1,4 +1,3 @@
-import type { UUID } from "crypto";
 import z from "zod";
 
 export const USER_ROLES = ["USER", "ADMIN"] as const;
@@ -13,20 +12,10 @@ export const USER_PERMISSIONS = [
 export type UserRole = (typeof USER_ROLES)[number];
 export type UserPermission = (typeof USER_PERMISSIONS)[number];
 
-export const USER_ROLES_PERMISSIONS: Record<
-  UserRole,
-  { name: UserRole; permissions: UserPermission[] }
-> = {
+export const USER_ROLES_PERMISSIONS: Record<UserRole, { name: UserRole; permissions: UserPermission[] }> = {
   ADMIN: {
     name: "ADMIN",
-    permissions: [
-      "read",
-      "write",
-      "request_print",
-      "approve_print",
-      "manage_users",
-      "view_users",
-    ],
+    permissions: ["read", "write", "request_print", "approve_print", "manage_users", "view_users"],
   },
   USER: {
     name: "USER",
@@ -61,9 +50,7 @@ export const SELF_CHANGEABLE_USER_FIELDS = [
   "email",
   "avatar",
 ] as const satisfies (keyof PrintFlowUserInfo)[];
-export const ADMIN_CHANGEABLE_USER_FIELDS = [
-  "roles",
-] as const satisfies (keyof PrintFlowUserInfo)[];
+export const ADMIN_CHANGEABLE_USER_FIELDS = ["roles"] as const satisfies (keyof PrintFlowUserInfo)[];
 export type UpdateableUserField =
   | (typeof SELF_CHANGEABLE_USER_FIELDS)[number]
   | (typeof ADMIN_CHANGEABLE_USER_FIELDS)[number];

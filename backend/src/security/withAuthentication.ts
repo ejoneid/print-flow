@@ -5,12 +5,7 @@ import { TEST_USERS } from "../user/testUsers.ts";
 import { logger } from "shared/node";
 import type { BunRequest } from "bun";
 import { unauthorizedResponse } from "../utils/responses.ts";
-import {
-  USER_PERMISSIONS,
-  USER_ROLES,
-  type UserPermission,
-  type UserRole,
-} from "shared/browser";
+import { USER_PERMISSIONS, USER_ROLES, type UserPermission, type UserRole } from "shared/browser";
 import cookie from "cookie";
 
 export type AuthDetails = {
@@ -35,8 +30,7 @@ export const withAuthentication = <TRequest extends BunRequest>(
   return async (req: TRequest): Promise<Response> => {
     if (process.env.ALLOW_AUTH_OVERRIDE === "true") {
       const overrideUserUuid = req.headers.get(USER_UUID_HEADER) as UUID | null;
-      if (!overrideUserUuid)
-        return unauthorizedResponse(`No ${USER_UUID_HEADER} header`);
+      if (!overrideUserUuid) return unauthorizedResponse(`No ${USER_UUID_HEADER} header`);
       if (overrideUserUuid in TEST_USERS) {
         return handler(req, TEST_USERS[overrideUserUuid]);
       }

@@ -25,12 +25,7 @@ export type Material = {
   color: string;
 };
 
-export type PrintStatus =
-  | "pending"
-  | "approved"
-  | "printing"
-  | "completed"
-  | "rejected";
+export type PrintStatus = "pending" | "approved" | "printing" | "completed" | "rejected";
 
 export type PrintQueueItemType = {
   uuid: UUID;
