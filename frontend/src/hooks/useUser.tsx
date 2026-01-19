@@ -1,12 +1,23 @@
+import { LoadingScreen } from "@/components/LoadingScreen.tsx";
+import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactElement, useContext } from "react";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { kyClient } from "../queryClient.ts";
 import { type PrintFlowUser, USER_PERMISSIONS, type UserPermission } from "shared/browser";
+import { kyClient } from "../queryClient.ts";
 
-const UserContext = createContext<PrintFlowUser | undefined>(undefined);
+const EMPTY_USER: PrintFlowUser = {
+  userUuid: "" as UUID,
+  email: "",
+  fullName: "",
+  avatar: undefined,
+  permissions: [],
+  roles: [],
+};
+
+const UserContext = createContext<PrintFlowUser>(EMPTY_USER);
 export const useUser = () => {
   return useContext(UserContext)!;
 };
+
 export const useUserPermissions = () => {
   const user = useUser();
   return USER_PERMISSIONS.reduce(
@@ -19,10 +30,11 @@ export const useUserPermissions = () => {
 };
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {
-  const { data } = useSuspenseQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["user"],
     queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
   });
 
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
+  if (isPending) return <LoadingScreen />;
+  return <UserContext.Provider value={data ?? EMPTY_USER}>{children}</UserContext.Provider>;
 };
