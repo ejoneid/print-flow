@@ -31,7 +31,7 @@ export const useUserPermissions = () => {
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {
   const { data, isPending } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["self"],
     queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
   });
 

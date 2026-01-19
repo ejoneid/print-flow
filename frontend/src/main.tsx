@@ -41,7 +41,14 @@ if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
           },
         },
       }),
-      Session.init(),
+      Session.init({
+        onHandleEvent: (context) => {
+          if (context.action === "SESSION_CREATED") {
+            // Invalidate the "self" query to refresh user data after login
+            queryClient.invalidateQueries({ queryKey: ["self"] });
+          }
+        },
+      }),
       ThirdParty.init({
         signInAndUpFeature: {
           providers: [Google.init()],
