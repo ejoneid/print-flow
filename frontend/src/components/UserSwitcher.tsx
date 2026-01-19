@@ -27,15 +27,16 @@ export const testUsers = {
   },
 } as const;
 
-export let selectedUserUuid = localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
+export function getSelectedUserUuid() {
+  return localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
+}
 
 export const UserSwitcher = () => {
   const [user, setUser] = useState<string>(() => sessionStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid);
 
   useEffect(() => {
     sessionStorage.setItem(USER_UUID_HEADER, user);
-    if (selectedUserUuid !== user) {
-      selectedUserUuid = user;
+    if (getSelectedUserUuid() !== user) {
       queryClient.invalidateQueries();
     }
   }, [user]);

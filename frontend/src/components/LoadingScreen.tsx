@@ -1,14 +1,12 @@
-import { Printer } from "lucide-react";
+import printFlowLogo from "@public/print_flow_logo.svg";
 
 export const LoadingScreen = () => {
   return (
     <div className="fixed inset-0 bg-background flex items-center justify-center">
       <div className="flex flex-col items-center gap-6">
-        {/* Animated Printer Icon */}
+        {/* Animated Logo */}
         <div className="relative">
-          <Printer className="w-16 h-16 text-primary animate-pulse" />
-          {/* Paper animation */}
-          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-12 h-8 bg-primary/20 rounded-sm animate-slide-down" />
+          <img src={printFlowLogo} className="w-16 h-16 animate-pulse" alt="Print Flow logo" />
         </div>
 
         {/* Loading Text */}
@@ -31,17 +29,6 @@ export const LoadingScreen = () => {
       </div>
 
       <style>{`
-        @keyframes slide-down {
-          0%, 100% {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-          }
-          50% {
-            transform: translateX(-50%) translateY(8px);
-            opacity: 0.5;
-          }
-        }
-
         @keyframes slide-right {
           0% {
             transform: translateX(-100%);
