@@ -1,6 +1,6 @@
 import { keepPreviousData, QueryCache, QueryClient } from "@tanstack/react-query";
 import ky, { type KyRequest } from "ky";
-import { getSelectedUserUuid } from "@/components/UserSwitcher.tsx";
+import { selectedUser } from "@/components/UserSwitcher.tsx";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +21,7 @@ export const kyClient = ky.create({
       process.env.FRONTEND_OVERRIDE_AUTH === "true"
         ? [
             (request: KyRequest) => {
-              request.headers.set(USER_UUID_HEADER, getSelectedUserUuid());
+              request.headers.set(USER_UUID_HEADER, selectedUser);
             },
           ]
         : undefined,
