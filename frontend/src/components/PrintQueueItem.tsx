@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import type { PrintQueueItemType } from "shared/browser";
+import type { PrintQueueItem as PrintQueueItemType } from "shared/browser";
 
 type PrintQueueItemProps = {
   item: PrintQueueItemType;

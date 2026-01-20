@@ -1,5 +1,5 @@
 import { serve } from "bun";
-import { approvePrint, getPrintQueue, postPrintQueue } from "./src/print-queue/printQueueService.ts";
+import { approvePrint, getPrintQueue, getPrintsForUser, postPrintQueue } from "./src/print-queue/printQueueService.ts";
 import { withAuthentication } from "./src/security/withAuthentication.ts";
 import { userService } from "./src/user/userService.ts";
 import { jsonResponseOr404 } from "./src/utils/jsonResponseOr404.ts";
@@ -29,6 +29,16 @@ serve({
             const userUuid = req.params.uuid as UUID;
             const update: UserUpdate = userUpdateSchema.parse(await req.json());
             return await userService.updateUser(userUuid, update, authDetails);
+          }),
+        ),
+      ),
+    },
+    "/api/users/:uuid/prints": {
+      GET: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req, authDetails) => {
+            const userUuid = req.params.uuid as UUID;
+            return await getPrintsForUser(userUuid, authDetails);
           }),
         ),
       ),

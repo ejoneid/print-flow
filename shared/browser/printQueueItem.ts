@@ -27,7 +27,7 @@ export type Material = {
 
 export type PrintStatus = "pending" | "approved" | "printing" | "completed" | "rejected";
 
-export type PrintQueueItemType = {
+export type PrintQueueItem = {
   uuid: UUID;
   name: string;
   requester: UUID;
@@ -39,7 +39,7 @@ export type PrintQueueItemType = {
   imageUrl: string | null;
 };
 
-export type PrintQueueItemTypeDto = {
+export type PrintQueueItemDto = {
   uuid: UUID;
   name: string;
   requester: string;

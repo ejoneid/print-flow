@@ -1,0 +1,19 @@
+meta {
+  name: user-print-queue
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/users/:uuid/prints
+  body: none
+  auth: none
+}
+
+params:path {
+  uuid: adminUserUuid
+}
+
+headers {
+  x-print-flow-user-uuid: adminUserUuid
+}
