@@ -1,17 +1,12 @@
-import { PrintQueueList } from "@/components/PrintQueueList.tsx";
+import { AllPrintsView } from "@/components/AllPrintsView.tsx";
+import { MyPrintsView } from "@/components/MyPrintsView.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useUser } from "@/hooks/useUser.tsx";
-import { kyClient } from "@/queryClient.ts";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import type { PrintQueueItemType } from "shared/browser";
 
 export function HomePage() {
-  const { data } = useQuery({
-    queryKey: ["queue"],
-    queryFn: () => kyClient("/api/print-queue").json<PrintQueueItemType[]>(),
-  });
-  const { roles } = useUser();
+  const { roles, permissions } = useUser();
+  const canReadQueue = permissions.includes("read_queue");
   const isAdmin = roles.includes("ADMIN");
 
   return (
@@ -30,7 +25,7 @@ export function HomePage() {
         </div>
       </div>
 
-      <PrintQueueList printQueue={data ?? []} />
+      {canReadQueue ? <AllPrintsView /> : <MyPrintsView />}
     </div>
   );
 }

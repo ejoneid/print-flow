@@ -2,8 +2,8 @@ import { type BunRequest, randomUUIDv7 } from "bun";
 import {
   type PrintQueueItemBody,
   printQueueItemSchema,
-  type PrintQueueItemType,
-  type PrintQueueItemTypeDto,
+  type PrintQueueItem,
+  type PrintQueueItemDto,
 } from "shared/browser";
 import { z } from "zod/v4";
 import {
@@ -20,26 +20,29 @@ import { forbiddenResponse } from "../utils/responses.ts";
 import { extractType } from "../utils/typeUtils.ts";
 import { getImageUrl } from "./imageUrlScraper.ts";
 import { userService } from "../user/userService.ts";
+import { UnauthorizedError } from "../errors.ts";
 
 export async function getPrintQueue(_: BunRequest, authDetails: AuthDetails): Promise<Response> {
-  if (!authDetails.permissions.has("read")) {
+  if (!authDetails.permissions.has("read_queue")) {
     return forbiddenResponse("User does not have permission to read print queue");
   }
+
   const entities = selectPrintQueueStatement.all(null);
-  const printQueue = joinPrintQueueAndMaterials(entities);
-  const requesterUuids = printQueue.map((item) => item.requester);
-  const requestersMap = await userService.getUserMetaDataByIds(requesterUuids);
-  const result = printQueue.map((item) => ({
-    ...item,
-    requester: requestersMap.get(item.requester)!.fullName,
-  }));
-  return Response.json(result satisfies PrintQueueItemTypeDto[]);
+  const result = await entitiesToPrintQueueItemDtos(entities);
+  return Response.json(result satisfies PrintQueueItemDto[]);
+}
+
+export async function getPrintsForUser(userUuid: UUID, authDetails: AuthDetails): Promise<PrintQueueItemDto[]> {
+  if (userUuid !== authDetails.userUuid && !authDetails.permissions.has("view_users")) {
+    throw new UnauthorizedError("User does not have permission to see other users");
+  }
+
+  // @ts-expect-error
+  const entities = selectUserPrintQueueStatement.all({ userUuid });
+  return await entitiesToPrintQueueItemDtos(entities);
 }
 
 export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
-  if (!authDetails.permissions.has("request_print")) {
-    return forbiddenResponse("User does not have permission to request print");
-  }
   const body = printQueueItemSchema.parse(await req.json());
   const imageUrl = await getImageUrl(body.modelLink);
   insertTransaction(body, imageUrl, authDetails.userUuid);
@@ -65,7 +68,7 @@ export async function approvePrint(
   return new Response(null, { status: 204 });
 }
 
-function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[]): PrintQueueItemType[] {
+function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[]): PrintQueueItem[] {
   const rowsByItemUuid = Object.groupBy(dbRows, (item) => item.uuid);
   return Object.values(rowsByItemUuid)
     .map((itemRows) => {
@@ -97,6 +100,10 @@ const SELECT_PRINT_QUEUE_SQL = `SELECT ${columnsToString(PRINT_QUEUE_COLUMNS, "p
                                 FROM print_queue pq
                                        LEFT JOIN material m ON pq.uuid = m.print_queue_uuid`;
 const selectPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(SELECT_PRINT_QUEUE_SQL);
+const selectUserPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(
+  `${SELECT_PRINT_QUEUE_SQL} WHERE pq.created_by = $userUuid`,
+);
+
 const insertPrintQueueStatement = db.query<PrintQueueEntity, Omit<PrintQueueEntity, "created_at" | "completed_at">>(
   "INSERT INTO print_queue (uuid, name, url, image_url, status, status_updated_by, created_by) VALUES ($uuid, $name, $url, $image_url, $status, $status_updated_by, $created_by) RETURNING *",
 );
@@ -130,3 +137,15 @@ const insertTransaction = db.transaction((body: PrintQueueItemBody, imageUrl: st
     });
   }
 });
+
+async function entitiesToPrintQueueItemDtos(
+  entities: (PrintQueueEntity & MaterialEntity)[],
+): Promise<PrintQueueItemDto[]> {
+  const printQueue = joinPrintQueueAndMaterials(entities);
+  const requesterUuids = printQueue.map((item) => item.requester);
+  const requestersMap = await userService.getUserMetaDataByIds(requesterUuids);
+  return printQueue.map((item) => ({
+    ...item,
+    requester: requestersMap.get(item.requester)!.fullName,
+  }));
+}
