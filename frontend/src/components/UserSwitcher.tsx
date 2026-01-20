@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { queryClient, USER_UUID_HEADER } from "../queryClient.ts";
+import { queryClient } from "../queryClient.ts";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
 import { User } from "lucide-react";
+
+export const USER_UUID_HEADER = "x-print-flow-user-uuid";
 
 export const testUsers = {
   default: {
@@ -27,16 +29,15 @@ export const testUsers = {
   },
 } as const;
 
-export function getSelectedUserUuid() {
-  return localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
-}
+export let selectedUser: string = localStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid;
 
 export const UserSwitcher = () => {
-  const [user, setUser] = useState<string>(() => sessionStorage.getItem(USER_UUID_HEADER) ?? testUsers.default.uuid);
+  const [user, setUser] = useState<string>(selectedUser);
 
   useEffect(() => {
     sessionStorage.setItem(USER_UUID_HEADER, user);
-    if (getSelectedUserUuid() !== user) {
+    if (selectedUser !== user) {
+      selectedUser = user;
       queryClient.invalidateQueries();
     }
   }, [user]);
