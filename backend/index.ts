@@ -7,6 +7,8 @@ import { withLogging } from "./src/utils/logginUtils.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 import { userUpdateSchema, type UserUpdate } from "shared/browser/user.ts";
 import { authDetailsToUser } from "./src/user/mappers.ts";
+import z from "zod";
+import { respondWith204OrError } from "./src/utils/respondWith204OrError.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -37,7 +39,7 @@ serve({
       GET: withLogging(
         withAuthentication(
           jsonResponseOr404(async (req, authDetails) => {
-            const userUuid = req.params.uuid as UUID;
+            const userUuid = z.uuid().parse(req.params.uuid) as UUID;
             return await getPrintsForUser(userUuid, authDetails);
           }),
         ),
@@ -48,7 +50,14 @@ serve({
       POST: withLogging(withAuthentication(postPrintQueue)),
     },
     "/api/print-queue/:uuid/approve": {
-      POST: withLogging(withAuthentication(approvePrint)),
+      POST: withLogging(
+        withAuthentication(
+          respondWith204OrError(async (req, authDetails) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            await approvePrint(printUuid, authDetails);
+          }),
+        ),
+      ),
     },
   },
   fetch: (req) => notFoundResponse(`Not found: ${req.url}`),

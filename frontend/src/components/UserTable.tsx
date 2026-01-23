@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { QUERIES } from "@/queries";
 import { kyClient, queryClient } from "@/queryClient";
 import { getFirstAndLastInitials } from "@/utils/stringUtils";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -25,10 +26,7 @@ const roleColors: Record<UserRole, string> = {
 };
 
 export function UserTable() {
-  const { data: users = [] } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => kyClient("/api/users").json<PrintFlowUserInfo[]>(),
-  });
+  const { data: users = [] } = useQuery(QUERIES.users);
   const { mutate } = useMutation({
     mutationFn: ({ userUuid, userUpdate }: { userUuid: UUID; userUpdate: UserUpdate }) =>
       kyClient(`/api/users/${userUuid}`, {

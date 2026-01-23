@@ -1,8 +1,8 @@
 import { LoadingScreen } from "@/components/LoadingScreen.tsx";
+import { QUERIES } from "@/queries.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactElement, useContext } from "react";
 import { type PrintFlowUser, USER_PERMISSIONS, type UserPermission } from "shared/browser";
-import { kyClient } from "../queryClient.ts";
 
 const EMPTY_USER: PrintFlowUser = {
   userUuid: "" as UUID,
@@ -30,10 +30,7 @@ export const useUserPermissions = () => {
 };
 
 export const UserContextProvider = ({ children }: { children: string | ReactElement | ReactElement[] }) => {
-  const { data, isPending } = useQuery({
-    queryKey: ["self"],
-    queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
-  });
+  const { data, isPending } = useQuery(QUERIES.self);
 
   if (isPending) return <LoadingScreen />;
   return <UserContext.Provider value={data ?? EMPTY_USER}>{children}</UserContext.Provider>;

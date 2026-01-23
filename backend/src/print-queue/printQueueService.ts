@@ -1,26 +1,19 @@
-import { type BunRequest, randomUUIDv7 } from "bun";
-import {
-  type PrintQueueItemBody,
-  printQueueItemSchema,
-  type PrintQueueItem,
-  type PrintQueueItemDto,
-} from "shared/browser";
-import { z } from "zod/v4";
-import {
-  columnsToString,
-  db,
-  MATERIAL_COLUMNS,
-  type MaterialEntity,
-  PRINT_QUEUE_COLUMNS,
-  type PrintQueueEntity,
-} from "../db.ts";
+import type { BunRequest } from "bun";
+import { type PrintQueueItem, type PrintQueueItemDto, printQueueItemSchema } from "shared/browser";
+import { MATERIAL_COLUMNS, type MaterialEntity, PRINT_QUEUE_COLUMNS, type PrintQueueEntity } from "../db.ts";
 import type { AuthDetails } from "../security/withAuthentication.ts";
 
+import { NotFoundError, UnauthorizedError } from "../errors.ts";
+import { userService } from "../user/userService.ts";
 import { forbiddenResponse } from "../utils/responses.ts";
 import { extractType } from "../utils/typeUtils.ts";
 import { getImageUrl } from "./imageUrlScraper.ts";
-import { userService } from "../user/userService.ts";
-import { UnauthorizedError } from "../errors.ts";
+import {
+  selectPrintQueueStatement,
+  insertTransaction,
+  approvePrintStatement,
+  selectPrintByUuid as selectPrintByUuidStatement,
+} from "./printQueueRepository.ts";
 
 export async function getPrintQueue(_: BunRequest, authDetails: AuthDetails): Promise<Response> {
   if (!authDetails.permissions.has("read_queue")) {
@@ -49,23 +42,21 @@ export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails):
   return new Response(null, { status: 204 });
 }
 
-export async function approvePrint(
-  req: BunRequest<"/api/print-queue/:uuid/approve">,
-  authDetails: AuthDetails,
-): Promise<Response> {
+export async function approvePrint(printUuid: UUID, authDetails: AuthDetails): Promise<void> {
   if (!authDetails.permissions.has("approve_print")) {
-    return forbiddenResponse("User does not have permission to approve print");
+    throw new UnauthorizedError("User does not have permission to approve print");
   }
-  const printUuid = z.uuid().parse(req.params.uuid);
-  approvePrintStatement.run({
+  const result = approvePrintStatement.run({
     uuid: printUuid,
+    status_updated_at: new Date().toISOString(),
     status_updated_by: authDetails.userUuid,
-    // status_updated_at: new Date(),
-    // $uuid: printUuid,
-    // $status_update_at: new Date(),
-    // $status_updat
   });
-  return new Response(null, { status: 204 });
+  if (result.changes === 0) {
+    const existingPrint = selectPrintByUuidStatement.get(printUuid);
+    if (!existingPrint) {
+      throw new NotFoundError("Print not found");
+    }
+  }
 }
 
 function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[]): PrintQueueItem[] {
@@ -95,48 +86,6 @@ function joinPrintQueueAndMaterials(dbRows: (PrintQueueEntity & MaterialEntity)[
     })
     .filter((item) => !!item);
 }
-
-const SELECT_PRINT_QUEUE_SQL = `SELECT ${columnsToString(PRINT_QUEUE_COLUMNS, "pq")}, ${columnsToString(MATERIAL_COLUMNS, "m")}
-                                FROM print_queue pq
-                                       LEFT JOIN material m ON pq.uuid = m.print_queue_uuid`;
-const selectPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(SELECT_PRINT_QUEUE_SQL);
-const selectUserPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(
-  `${SELECT_PRINT_QUEUE_SQL} WHERE pq.created_by = $userUuid`,
-);
-
-const insertPrintQueueStatement = db.query<PrintQueueEntity, Omit<PrintQueueEntity, "created_at" | "completed_at">>(
-  "INSERT INTO print_queue (uuid, name, url, image_url, status, status_updated_by, created_by) VALUES ($uuid, $name, $url, $image_url, $status, $status_updated_by, $created_by) RETURNING *",
-);
-
-const insertMaterialStatement = db.query(
-  "INSERT INTO material (uuid, print_queue_uuid, type, color) VALUES ($uuid, $print_queue_uuid, $type, $color) RETURNING *",
-);
-
-// const APPROVED_STATUS: PrintStatus = "approved";
-const approvePrintStatement = db.query(
-  "UPDATE print_queue SET status = 'approved', status_updated_at = $status_updated_at, status_updated_by = $status_updated_by WHERE uuid = $uuid AND status != 'approved'",
-);
-
-const insertTransaction = db.transaction((body: PrintQueueItemBody, imageUrl: string | null, userUuid: UUID) => {
-  const uuid = randomUUIDv7() as UUID;
-  insertPrintQueueStatement.run({
-    uuid: uuid,
-    name: body.name,
-    url: body.modelLink,
-    image_url: imageUrl,
-    status: "pending",
-    status_updated_by: userUuid,
-    created_by: userUuid,
-  });
-  for (const material of body.materials) {
-    insertMaterialStatement.run({
-      uuid: randomUUIDv7(),
-      print_queue_uuid: uuid,
-      type: material.type,
-      color: material.color,
-    });
-  }
-});
 
 async function entitiesToPrintQueueItemDtos(
   entities: (PrintQueueEntity & MaterialEntity)[],
