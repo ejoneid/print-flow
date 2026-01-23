@@ -1,0 +1,65 @@
+{
+  "lsp": {
+    "eslint": {
+      "enable_lsp_tasks": false
+    }
+  },
+  "languages": {
+    "JavaScript": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TypeScript": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "TSX": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSON": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "JSONC": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "CSS": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    },
+    "GraphQL": {
+      "language_servers": ["!eslint", "biome", "..."],
+      "formatter": {
+        "language_server": {
+          "name": "biome"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+meta {
+  name: approve-print
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/print-queue/:uuid/approve
+  body: none
+  auth: none
+}
+
+params:path {
+  uuid: 019bd275-d9c5-7000-b351-b98d4743bb71
+}
+
+headers {
+  x-print-flow-user-uuid: adminUserUuid
+}

@@ -1,16 +1,27 @@
-import paceholderImage from "@public/480x380.svg";
-import { CheckCircle, Clock, ExternalLink, Printer, XCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { useApprovalMutation } from "@/hooks/useApprovalMutation";
+import { useUserPermissions } from "@/hooks/useUser";
+import { formatPrintStatus } from "@/utils/formatters";
+import paceholderImage from "@public/480x380.svg";
+import { CheckCircle, Clock, ExternalLink, Printer, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { PrintQueueItem as PrintQueueItemType } from "shared/browser";
+import { Spinner } from "./ui/spinner";
 
 type PrintQueueItemProps = {
   item: PrintQueueItemType;
 };
 
 export function PrintQueueItem({ item }: PrintQueueItemProps) {
+  const permissions = useUserPermissions();
+
+  const { mutate, isPending } = useApprovalMutation();
+  const handleApprove = () => {
+    mutate(item.uuid);
+  };
+
   const statusColors = {
     pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
     approved: "bg-green-100 text-green-800 hover:bg-green-100",
@@ -27,7 +38,6 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
     rejected: <XCircle className="h-4 w-4 mr-1" />,
   };
 
-  console.log(item.status);
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -38,7 +48,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
           </div>
           <Badge className={statusColors[item.status]} variant="outline">
             {statusIcons[item.status]}
-            {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
+            {formatPrintStatus(item.status)}
           </Badge>
         </div>
       </CardHeader>
@@ -87,6 +97,12 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
         <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
           <Link to={`/print/${item.uuid}`}>View Details</Link>
         </Button>
+        {permissions.approve_print && item.status === "pending" && (
+          <Button size="sm" variant="default" className="w-full sm:w-auto" onClick={handleApprove} disabled={isPending}>
+            {isPending ? <Spinner data-icon="inline-start" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+            Approve
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

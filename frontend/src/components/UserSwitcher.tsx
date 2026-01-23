@@ -35,7 +35,7 @@ export const UserSwitcher = () => {
   const [user, setUser] = useState<string>(selectedUser);
 
   useEffect(() => {
-    sessionStorage.setItem(USER_UUID_HEADER, user);
+    localStorage.setItem(USER_UUID_HEADER, user);
     if (selectedUser !== user) {
       selectedUser = user;
       queryClient.invalidateQueries();
