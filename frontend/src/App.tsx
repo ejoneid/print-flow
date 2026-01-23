@@ -3,6 +3,7 @@ import { UserSwitcher } from "./components/UserSwitcher.tsx";
 import { UserMenu } from "@/components/UserMenu.tsx";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner.tsx";
+import { Link } from "react-router-dom";
 
 function App() {
   return (
@@ -10,9 +11,9 @@ function App() {
       <header>
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex gap-4 items-center">
-            <a href="/">
+            <Link to="/">
               <img src={printFlowLogo} className="h-20" alt="Print flow logo" />
-            </a>
+            </Link>
             <h1 className="lg:text-5xl text-3xl font-bold mb-2">Print Flow</h1>
           </div>
           <span className="mr-1">
