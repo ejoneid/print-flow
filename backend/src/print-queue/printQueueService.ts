@@ -1,5 +1,5 @@
 import type { BunRequest } from "bun";
-import { type PrintQueueItem, type PrintQueueItemDto, printQueueItemSchema } from "shared/browser";
+import { type PrintQueueItem, type PrintQueueItemDto, printQueueItemSchema, type PrintStatus } from "shared/browser";
 import { MATERIAL_COLUMNS, type MaterialEntity, PRINT_QUEUE_COLUMNS, type PrintQueueEntity } from "../db.ts";
 import type { AuthDetails } from "../security/withAuthentication.ts";
 
@@ -42,12 +42,13 @@ export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails):
   return new Response(null, { status: 204 });
 }
 
-export async function approvePrint(printUuid: UUID, authDetails: AuthDetails): Promise<void> {
+export async function updatePrintStatus(printUuid: UUID, status: PrintStatus, authDetails: AuthDetails): Promise<void> {
   if (!authDetails.permissions.has("approve_print")) {
     throw new UnauthorizedError("User does not have permission to approve print");
   }
   const result = approvePrintStatement.run({
     uuid: printUuid,
+    status,
     status_updated_at: new Date().toISOString(),
     status_updated_by: authDetails.userUuid,
   });

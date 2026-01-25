@@ -1,0 +1,25 @@
+meta {
+  name: update-status
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/api/print-queue/:uuid/status
+  body: json
+  auth: none
+}
+
+params:path {
+  uuid: 019bdd14-02d9-7000-8bc5-6dc120814a43
+}
+
+headers {
+  x-print-flow-user-uuid: adminUserUuid
+}
+
+body:json {
+  {
+    "status": "completed"
+  }
+}

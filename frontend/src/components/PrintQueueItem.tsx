@@ -1,14 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { useApprovalMutation } from "@/hooks/useApprovalMutation";
 import { useUserPermissions } from "@/hooks/useUser";
-import { formatPrintStatus } from "@/utils/formatters";
 import paceholderImage from "@public/480x380.svg";
-import { CheckCircle, Clock, ExternalLink, Printer, XCircle } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { PrintQueueItem as PrintQueueItemType } from "shared/browser";
-import { Spinner } from "./ui/spinner";
+import { PrintStatusBadge } from "./PrintStatusBadge";
 
 type PrintQueueItemProps = {
   item: PrintQueueItemType;
@@ -16,27 +14,6 @@ type PrintQueueItemProps = {
 
 export function PrintQueueItem({ item }: PrintQueueItemProps) {
   const permissions = useUserPermissions();
-
-  const { mutate, isPending } = useApprovalMutation();
-  const handleApprove = () => {
-    mutate(item.uuid);
-  };
-
-  const statusColors = {
-    pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
-    approved: "bg-green-100 text-green-800 hover:bg-green-100",
-    printing: "bg-purple-100 text-purple-800 hover:bg-purple-100",
-    completed: "bg-blue-100 text-blue-800 hover:bg-blue-100",
-    rejected: "bg-red-100 text-red-800 hover:bg-red-100",
-  };
-
-  const statusIcons = {
-    pending: <Clock className="h-4 w-4 mr-1" />,
-    approved: <CheckCircle className="h-4 w-4 mr-1" />,
-    printing: <Printer className="h-4 w-4 mr-1" />,
-    completed: <CheckCircle className="h-4 w-4 mr-1" />,
-    rejected: <XCircle className="h-4 w-4 mr-1" />,
-  };
 
   return (
     <Card>
@@ -46,10 +23,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
             <h3 className="font-semibold text-lg">{item.name}</h3>
             <p className="text-sm text-muted-foreground">Requested by: {item.requester}</p>
           </div>
-          <Badge className={statusColors[item.status]} variant="outline">
-            {statusIcons[item.status]}
-            {formatPrintStatus(item.status)}
-          </Badge>
+          <PrintStatusBadge printUuid={item.uuid} status={item.status} isAdmin={permissions.approve_print} />
         </div>
       </CardHeader>
       <CardContent className="pb-2">
@@ -97,12 +71,6 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
         <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
           <Link to={`/print/${item.uuid}`}>View Details</Link>
         </Button>
-        {permissions.approve_print && item.status === "pending" && (
-          <Button size="sm" variant="default" className="w-full sm:w-auto" onClick={handleApprove} disabled={isPending}>
-            {isPending ? <Spinner data-icon="inline-start" /> : <CheckCircle className="h-4 w-4 mr-2" />}
-            Approve
-          </Button>
-        )}
       </CardFooter>
     </Card>
   );

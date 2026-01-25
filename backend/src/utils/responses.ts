@@ -1,7 +1,7 @@
 import { logger } from "shared/node";
 
 export function unauthorizedResponse(message: string) {
-  logger.info(message);
+  logger.warn(message);
   return new Response("Unauthorized", {
     status: 401,
     headers: {
@@ -11,7 +11,7 @@ export function unauthorizedResponse(message: string) {
 }
 
 export function forbiddenResponse(message: string) {
-  logger.info(message);
+  logger.warn(message);
   return new Response("Forbidden", {
     status: 403,
     headers: {
@@ -24,6 +24,16 @@ export function notFoundResponse(message: string) {
   logger.warn(message);
   return new Response("Not found", {
     status: 404,
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
+}
+
+export function badRequestResponse(message: string) {
+  logger.warn(message);
+  return new Response("Bad Request", {
+    status: 400,
     headers: {
       "Content-Type": "text/plain",
     },
