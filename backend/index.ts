@@ -1,14 +1,19 @@
 import { serve } from "bun";
-import { approvePrint, getPrintQueue, getPrintsForUser, postPrintQueue } from "./src/print-queue/printQueueService.ts";
+import {
+  updatePrintStatus,
+  getPrintQueue,
+  getPrintsForUser,
+  postPrintQueue,
+} from "./src/print-queue/printQueueService.ts";
 import { withAuthentication } from "./src/security/withAuthentication.ts";
 import { userService } from "./src/user/userService.ts";
-import { jsonResponseOr404 } from "./src/utils/jsonResponseOr404.ts";
+import { jsonResponseOr404, respondWith204OrError } from "./src/utils/responseUtils.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 import { userUpdateSchema, type UserUpdate } from "shared/browser/user.ts";
 import { authDetailsToUser } from "./src/user/mappers.ts";
 import z from "zod";
-import { respondWith204OrError } from "./src/utils/respondWith204OrError.ts";
+import { PRINT_STATUSES } from "shared/browser/printQueueItem.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -49,12 +54,13 @@ serve({
       GET: withLogging(withAuthentication(getPrintQueue)),
       POST: withLogging(withAuthentication(postPrintQueue)),
     },
-    "/api/print-queue/:uuid/approve": {
-      POST: withLogging(
+    "/api/print-queue/:uuid/status": {
+      PUT: withLogging(
         withAuthentication(
           respondWith204OrError(async (req, authDetails) => {
             const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            await approvePrint(printUuid, authDetails);
+            const status = z.enum(PRINT_STATUSES).parse((await req.json())?.status);
+            await updatePrintStatus(printUuid, status, authDetails);
           }),
         ),
       ),

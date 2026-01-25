@@ -25,7 +25,8 @@ export type Material = {
   color: string;
 };
 
-export type PrintStatus = "pending" | "approved" | "printing" | "completed" | "rejected";
+export const PRINT_STATUSES = ["pending", "approved", "printing", "completed", "rejected"] as const;
+export type PrintStatus = (typeof PRINT_STATUSES)[number];
 
 export type PrintQueueItem = {
   uuid: UUID;

@@ -321,9 +321,6 @@ In development, you can bypass the auth service:
 Each package has its own `tsconfig.json` extending `tsconfig.base.json`
 The backend has a custom `tsc` script that filters out migration library errors.
 
-### Git Hooks
-Husky is configured for pre-commit hooks (likely for linting/formatting)
-
 ## Common Tasks for frodes (Frontend Developers)
 
 ### Creating a New Component

@@ -13,11 +13,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, devshell, flake-utils, haumea }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      devshell,
+      flake-utils,
+      haumea,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
+          config.allowUnfree = true;
           overlays = [
             devshell.overlays.default
           ];
@@ -29,6 +38,7 @@
         };
 
         bun = pkgs.bun;
+        claude-code = pkgs.claude-code;
       in
       {
         devShells = rec {
@@ -37,6 +47,7 @@
             name = "site";
             packages = [
               bun
+              claude-code
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/current"

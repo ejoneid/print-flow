@@ -32,9 +32,8 @@ export const insertMaterialStatement = db.query(
   "INSERT INTO material (uuid, print_queue_uuid, type, color) VALUES ($uuid, $print_queue_uuid, $type, $color) RETURNING *",
 );
 
-// const APPROVED_STATUS: PrintStatus = "approved";
 export const approvePrintStatement = db.query(
-  "UPDATE print_queue SET status = 'approved', status_updated_at = $status_updated_at, status_updated_by = $status_updated_by WHERE uuid = $uuid AND status != 'approved'",
+  "UPDATE print_queue SET status = $status, status_updated_at = $status_updated_at, status_updated_by = $status_updated_by WHERE uuid = $uuid",
 );
 
 export const insertTransaction = db.transaction((body: PrintQueueItemBody, imageUrl: string | null, userUuid: UUID) => {

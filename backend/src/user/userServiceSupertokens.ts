@@ -5,7 +5,7 @@ import { getUserMetadata } from "supertokens-node/recipe/usermetadata";
 import { addRoleToUser, getRolesForUser, removeUserRole } from "supertokens-node/recipe/userroles";
 import { NotFoundError, NotImplementedError, UnauthorizedError } from "../errors";
 import type { AuthDetails } from "../security/withAuthentication";
-import { getKeys } from "../utils/objectUtils";
+import { getKeys } from "shared/browser/objectUtils";
 import { isUserRoles } from "../utils/typeGuards";
 import { getPermittedFields } from "./userPermissionService";
 import type { UserService } from "./userService";

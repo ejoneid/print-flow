@@ -5,6 +5,12 @@ export function formatPrintStatus(status: PrintStatus) {
     case "pending":
       return "Pending approval";
     case "approved":
-      return status.charAt(0).toUpperCase() + status.slice(1);
+      return "Approved";
+    case "printing":
+      return "Printing";
+    case "completed":
+      return "Completed";
+    case "rejected":
+      return "Rejected";
   }
 }

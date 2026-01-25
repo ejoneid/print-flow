@@ -1,11 +1,12 @@
 import { QUERIES } from "@/queries";
 import { kyClient, queryClient } from "@/queryClient";
 import { useMutation } from "@tanstack/react-query";
+import type { PrintStatus } from "shared/browser";
 
-export const useApprovalMutation = () =>
+export const usePrintStatusMutation = () =>
   useMutation({
-    mutationFn: async (printUuid: string) => {
-      await kyClient.post(`/api/print-queue/${printUuid}/approve`);
+    mutationFn: async ({ printUuid, status }: { printUuid: string; status: PrintStatus }) => {
+      await kyClient.put(`/api/print-queue/${printUuid}/status`, { json: { status } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERIES.queue.queryKey });

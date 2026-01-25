@@ -1,7 +1,7 @@
 import type { PrintFlowUser, PrintFlowUserInfo, UserMetaData, UserUpdate } from "shared/browser";
 import { UnauthorizedError } from "../errors";
 import type { AuthDetails } from "../security/withAuthentication";
-import { getKeys } from "../utils/objectUtils";
+import { getKeys } from "shared/browser/objectUtils";
 import { authDetailsToUser, authDetailsToUserInfo } from "./mappers";
 import { TEST_USERS, userUpdateToAuthDetails } from "./testUsers";
 import { getPermittedFields } from "./userPermissionService";
