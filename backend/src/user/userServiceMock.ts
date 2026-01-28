@@ -6,9 +6,11 @@ import { authDetailsToUser, authDetailsToUserInfo } from "./mappers";
 import { TEST_USERS, userUpdateToAuthDetails } from "./testUsers";
 import { getPermittedFields } from "./userPermissionService";
 import type { UserService } from "./userService";
+import { getAuthDetails } from "../security/requestContext";
 
 export class UserServiceMock implements UserService {
   getUser = (userUuid: UUID): Promise<PrintFlowUser> => {
+    console.log(getAuthDetails());
     return Promise.resolve(authDetailsToUser(TEST_USERS[userUuid]));
   };
 
@@ -32,7 +34,8 @@ export class UserServiceMock implements UserService {
     return Promise.resolve(userMetaDataMap);
   };
 
-  getUsers = (authDetails: AuthDetails): Promise<PrintFlowUserInfo[]> => {
+  getUsers = (): Promise<PrintFlowUserInfo[]> => {
+    const authDetails = getAuthDetails();
     if (!authDetails.permissions.has("view_users"))
       throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
 
@@ -49,7 +52,8 @@ export class UserServiceMock implements UserService {
     );
   };
 
-  updateUser = (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => {
+  updateUser = (userUuid: UUID, update: UserUpdate) => {
+    const authDetails = getAuthDetails();
     const permittedFields = getPermittedFields(userUuid, authDetails);
     const fieldsToUpdate = getKeys(update);
 

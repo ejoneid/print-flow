@@ -1,4 +1,5 @@
 import { HomePage } from "@/pages/Home.tsx";
+import { ProfilePage } from "@/pages/Profile.tsx";
 import { RequestPage } from "@/pages/Request.tsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
@@ -87,6 +88,7 @@ const Application = () => (
               <Route index element={<HomePage />} />
               <Route path="request" element={<RequestPage />} />
               <Route path="admin" element={<AdminPage />} />
+              <Route path="profile/:userUuid" element={<ProfilePage />} />
             </Route>
           </Routes>
         </BrowserRouter>

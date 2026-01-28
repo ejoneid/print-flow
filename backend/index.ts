@@ -27,15 +27,24 @@ serve({
       GET: withLogging(withAuthentication(jsonResponseOr404((_, authDetails) => authDetailsToUser(authDetails)))),
     },
     "/api/users": {
-      GET: withLogging(withAuthentication(jsonResponseOr404((_, authDetails) => userService.getUsers(authDetails)))),
+      GET: withLogging(withAuthentication(jsonResponseOr404((_, authDetails) => userService.getUsers()))),
     },
     "/api/users/:uuid": {
+      GET: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req, authDetails) => {
+            const userUuid = req.params.uuid as UUID;
+            // TODO: Implement user details retrieval with authentication
+            return await userService.getUser(userUuid);
+          }),
+        ),
+      ),
       PATCH: withLogging(
         withAuthentication(
           jsonResponseOr404(async (req, authDetails) => {
             const userUuid = req.params.uuid as UUID;
             const update: UserUpdate = userUpdateSchema.parse(await req.json());
-            return await userService.updateUser(userUuid, update, authDetails);
+            return await userService.updateUser(userUuid, update);
           }),
         ),
       ),
@@ -45,7 +54,7 @@ serve({
         withAuthentication(
           jsonResponseOr404(async (req, authDetails) => {
             const userUuid = z.uuid().parse(req.params.uuid) as UUID;
-            return await getPrintsForUser(userUuid, authDetails);
+            return await getPrintsForUser(userUuid);
           }),
         ),
       ),
@@ -60,7 +69,7 @@ serve({
           respondWith204OrError(async (req, authDetails) => {
             const printUuid = z.uuid().parse(req.params.uuid) as UUID;
             const status = z.enum(PRINT_STATUSES).parse((await req.json())?.status);
-            await updatePrintStatus(printUuid, status, authDetails);
+            await updatePrintStatus(printUuid, status);
           }),
         ),
       ),

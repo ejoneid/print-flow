@@ -3,6 +3,7 @@ import { NotFoundError, UnauthorizedError } from "../errors";
 import type { AuthDetails, AuthenticatedRequestHandler } from "../security/withAuthentication";
 import { badRequestResponse, forbiddenResponse, internalServerErrorResponse, notFoundResponse } from "./responses";
 import { ZodError } from "zod";
+import { logger } from "shared/node";
 
 export const jsonResponseOr404 = <T, TRequest extends BunRequest>(
   serviceFunction: (req: TRequest, authDetails: AuthDetails) => T | Promise<T | null | undefined>,

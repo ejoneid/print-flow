@@ -14,8 +14,10 @@ import {
   approvePrintStatement,
   selectPrintByUuid as selectPrintByUuidStatement,
 } from "./printQueueRepository.ts";
+import { getAuthDetails } from "../security/requestContext.ts";
 
-export async function getPrintQueue(_: BunRequest, authDetails: AuthDetails): Promise<Response> {
+export async function getPrintQueue(_: BunRequest): Promise<Response> {
+  const authDetails = getAuthDetails();
   if (!authDetails.permissions.has("read_queue")) {
     return forbiddenResponse("User does not have permission to read print queue");
   }
@@ -25,7 +27,8 @@ export async function getPrintQueue(_: BunRequest, authDetails: AuthDetails): Pr
   return Response.json(result satisfies PrintQueueItemDto[]);
 }
 
-export async function getPrintsForUser(userUuid: UUID, authDetails: AuthDetails): Promise<PrintQueueItemDto[]> {
+export async function getPrintsForUser(userUuid: UUID): Promise<PrintQueueItemDto[]> {
+  const authDetails = getAuthDetails();
   if (userUuid !== authDetails.userUuid && !authDetails.permissions.has("view_users")) {
     throw new UnauthorizedError("User does not have permission to see other users");
   }
@@ -35,14 +38,16 @@ export async function getPrintsForUser(userUuid: UUID, authDetails: AuthDetails)
   return await entitiesToPrintQueueItemDtos(entities);
 }
 
-export async function postPrintQueue(req: BunRequest, authDetails: AuthDetails): Promise<Response> {
+export async function postPrintQueue(req: BunRequest): Promise<Response> {
+  const authDetails = getAuthDetails();
   const body = printQueueItemSchema.parse(await req.json());
   const imageUrl = await getImageUrl(body.modelLink);
   insertTransaction(body, imageUrl, authDetails.userUuid);
   return new Response(null, { status: 204 });
 }
 
-export async function updatePrintStatus(printUuid: UUID, status: PrintStatus, authDetails: AuthDetails): Promise<void> {
+export async function updatePrintStatus(printUuid: UUID, status: PrintStatus): Promise<void> {
+  const authDetails = getAuthDetails();
   if (!authDetails.permissions.has("approve_print")) {
     throw new UnauthorizedError("User does not have permission to approve print");
   }

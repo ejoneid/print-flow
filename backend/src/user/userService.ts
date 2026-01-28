@@ -26,8 +26,8 @@ export interface UserService {
   getUser: (userUuid: UUID) => Promise<PrintFlowUserInfo | undefined>;
   getUserMetaDataById: (userUuid: UUID) => Promise<UserMetaData>;
   getUserMetaDataByIds: (userUuids: UUID[]) => Promise<Map<UUID, UserMetaData>>;
-  getUsers: (authDetails: AuthDetails) => Promise<PrintFlowUserInfo[]>;
-  updateUser: (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => Promise<PrintFlowUserInfo>;
+  getUsers: () => Promise<PrintFlowUserInfo[]>;
+  updateUser: (userUuid: UUID, update: UserUpdate) => Promise<PrintFlowUserInfo>;
 }
 
 export const userService: UserService =

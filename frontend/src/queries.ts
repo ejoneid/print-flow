@@ -6,7 +6,7 @@ export const QUERIES = {
     queryKey: ["queue"],
     queryFn: () => kyClient("/api/print-queue").json<PrintQueueItem[]>(),
   },
-  myPrints: ({ userUuid }: { userUuid: UUID }) => ({
+  userPrints: ({ userUuid }: { userUuid: UUID }) => ({
     queryKey: ["my-prints", userUuid],
     queryFn: () => kyClient(`/api/users/${userUuid}/prints`).json<PrintQueueItem[]>(),
   }),
@@ -14,6 +14,10 @@ export const QUERIES = {
     queryKey: ["users"],
     queryFn: () => kyClient("/api/users").json<PrintFlowUserInfo[]>(),
   },
+  user: ({ userUuid }: { userUuid: UUID }) => ({
+    queryKey: ["user", userUuid],
+    queryFn: () => kyClient(`/api/users/${userUuid}`).json<PrintFlowUserInfo>(),
+  }),
   self: {
     queryKey: ["self"],
     queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
