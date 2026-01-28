@@ -17,11 +17,11 @@ export const USER_UUID_HEADER = "x-print-flow-user-uuid";
 export const testUsers = {
   default: {
     name: "user",
-    uuid: "defaultTestUserUuid",
+    uuid: "019c069d-9d9f-7000-afab-bcd09db382bd",
   },
   user1: {
     name: "admin",
-    uuid: "adminUserUuid",
+    uuid: "019c069f-66a2-7000-8a8e-d7dbb8491a72",
   },
   guest: {
     name: "guest",

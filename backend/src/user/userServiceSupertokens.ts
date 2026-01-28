@@ -9,6 +9,7 @@ import { getKeys } from "shared/browser/objectUtils";
 import { isUserRoles } from "../utils/typeGuards";
 import { getPermittedFields } from "./userPermissionService";
 import type { UserService } from "./userService";
+import { getAuthDetails } from "../security/requestContext";
 
 const TENANT = "public";
 
@@ -31,7 +32,8 @@ export class UserServiceSupertokens implements UserService {
     return (await getUserMetadata(userId)).metadata;
   };
 
-  getUsers = async (authDetails: AuthDetails): Promise<PrintFlowUserInfo[]> => {
+  getUsers = async (): Promise<PrintFlowUserInfo[]> => {
+    const authDetails = getAuthDetails();
     if (!authDetails.permissions.has("view_users"))
       throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
     const authResponse = await getUsersNewestFirst({
@@ -87,7 +89,8 @@ export class UserServiceSupertokens implements UserService {
     return new Map(results);
   };
 
-  updateUser = async (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => {
+  updateUser = async (userUuid: UUID, update: UserUpdate) => {
+    const authDetails = getAuthDetails();
     const permittedFields = getPermittedFields(userUuid, authDetails);
     console.log("permittedFields:", permittedFields);
     const fieldsToUpdate = getKeys(update);
