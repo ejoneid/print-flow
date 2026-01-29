@@ -40,7 +40,7 @@ export function UserMenu() {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/profile" className="cursor-pointer flex w-full">
+          <Link to={`/profile/${user?.userUuid}`} className="cursor-pointer flex w-full">
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
