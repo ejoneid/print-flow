@@ -7,6 +7,7 @@ import type { BunRequest } from "bun";
 import { unauthorizedResponse } from "../utils/responses.ts";
 import { USER_PERMISSIONS, USER_ROLES, type UserPermission, type UserRole } from "shared/browser";
 import cookie from "cookie";
+import { runWithRequestContext } from "./requestContext.ts";
 
 export type AuthDetails = {
   userUuid: UUID;
@@ -17,22 +18,17 @@ export type AuthDetails = {
   permissions: Set<UserPermission>;
 };
 
-export type AuthenticatedRequestHandler<TRequest extends BunRequest> = (
-  req: TRequest,
-  authDetails: AuthDetails,
-) => Response | Promise<Response>;
-
 const USER_UUID_HEADER = "x-print-flow-user-uuid";
 
 export const withAuthentication = <TRequest extends BunRequest>(
-  handler: AuthenticatedRequestHandler<TRequest>,
+  handler: RequestHandler<TRequest>,
 ): RequestHandler<TRequest> => {
   return async (req: TRequest): Promise<Response> => {
     if (process.env.ALLOW_AUTH_OVERRIDE === "true") {
       const overrideUserUuid = req.headers.get(USER_UUID_HEADER) as UUID | null;
       if (!overrideUserUuid) return unauthorizedResponse(`No ${USER_UUID_HEADER} header`);
       if (overrideUserUuid in TEST_USERS) {
-        return handler(req, TEST_USERS[overrideUserUuid]);
+        return runWithRequestContext({ authDetails: TEST_USERS[overrideUserUuid] }, () => handler(req));
       }
       return unauthorizedResponse(`No test user with uuid ${overrideUserUuid}`);
     }
@@ -69,7 +65,7 @@ export const withAuthentication = <TRequest extends BunRequest>(
       permissions: extractUserPermissions(decodedJwt),
     };
 
-    return handler(req, authDetails);
+    return runWithRequestContext({ authDetails }, () => handler(req));
   };
 };
 

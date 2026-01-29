@@ -56,6 +56,7 @@
             devshell.startup.version_info.text = ''
               echo "---Print flow development environment---"
               echo "bun: $(${bun}/bin/bun --version)"
+              echo "claude: $(${claude-code}/bin/claude --version)"
               echo "----------------------------------------"
             '';
           };

@@ -3,7 +3,6 @@ import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
 import UserMetadata from "supertokens-node/recipe/usermetadata";
 import UserRoles from "supertokens-node/recipe/userroles";
-import type { AuthDetails } from "../security/withAuthentication.ts";
 import { UserServiceMock } from "./userServiceMock.ts";
 import { UserServiceSupertokens } from "./userServiceSupertokens.ts";
 
@@ -26,8 +25,8 @@ export interface UserService {
   getUser: (userUuid: UUID) => Promise<PrintFlowUserInfo | undefined>;
   getUserMetaDataById: (userUuid: UUID) => Promise<UserMetaData>;
   getUserMetaDataByIds: (userUuids: UUID[]) => Promise<Map<UUID, UserMetaData>>;
-  getUsers: (authDetails: AuthDetails) => Promise<PrintFlowUserInfo[]>;
-  updateUser: (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => Promise<PrintFlowUserInfo>;
+  getUsers: () => Promise<PrintFlowUserInfo[]>;
+  updateUser: (userUuid: UUID, update: UserUpdate) => Promise<PrintFlowUserInfo>;
 }
 
 export const userService: UserService =

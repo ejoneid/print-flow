@@ -4,16 +4,17 @@ import { getUser, getUsersNewestFirst } from "supertokens-node";
 import { getUserMetadata } from "supertokens-node/recipe/usermetadata";
 import { addRoleToUser, getRolesForUser, removeUserRole } from "supertokens-node/recipe/userroles";
 import { NotFoundError, NotImplementedError, UnauthorizedError } from "../errors";
-import type { AuthDetails } from "../security/withAuthentication";
 import { getKeys } from "shared/browser/objectUtils";
 import { isUserRoles } from "../utils/typeGuards";
-import { getPermittedFields } from "./userPermissionService";
+import { userPermissionService } from "./userPermissionService";
 import type { UserService } from "./userService";
+import { getAuthDetails } from "../security/requestContext";
 
 const TENANT = "public";
 
 export class UserServiceSupertokens implements UserService {
   getUser = async (userUuid: UUID): Promise<PrintFlowUserInfo | undefined> => {
+    userPermissionService.canViewUserOrError(userUuid);
     const user = await getUser(userUuid);
     if (!user) return undefined;
     const userMetadata = await this.getUserMetaDataById(user.id as UUID);
@@ -31,7 +32,8 @@ export class UserServiceSupertokens implements UserService {
     return (await getUserMetadata(userId)).metadata;
   };
 
-  getUsers = async (authDetails: AuthDetails): Promise<PrintFlowUserInfo[]> => {
+  getUsers = async (): Promise<PrintFlowUserInfo[]> => {
+    const authDetails = getAuthDetails();
     if (!authDetails.permissions.has("view_users"))
       throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
     const authResponse = await getUsersNewestFirst({
@@ -87,8 +89,9 @@ export class UserServiceSupertokens implements UserService {
     return new Map(results);
   };
 
-  updateUser = async (userUuid: UUID, update: UserUpdate, authDetails: AuthDetails) => {
-    const permittedFields = getPermittedFields(userUuid, authDetails);
+  updateUser = async (userUuid: UUID, update: UserUpdate) => {
+    const authDetails = getAuthDetails();
+    const permittedFields = userPermissionService.getPermittedFields(userUuid, authDetails);
     console.log("permittedFields:", permittedFields);
     const fieldsToUpdate = getKeys(update);
     console.log("fieldsToUpdate:", fieldsToUpdate);

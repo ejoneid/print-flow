@@ -2,16 +2,16 @@ import { USER_ROLES_PERMISSIONS, type UserRole, type UserUpdate } from "shared/b
 import type { AuthDetails } from "../security/withAuthentication.ts";
 
 export const TEST_USERS: Record<UUID, AuthDetails> = {
-  ["defaultTestUserUuid" as UUID]: {
-    userUuid: "defaultTestUserUuid" as UUID,
+  "019c069d-9d9f-7000-afab-bcd09db382bd": {
+    userUuid: "019c069d-9d9f-7000-afab-bcd09db382bd",
     fullName: "Tester Testington",
     email: "tester@example.com",
     avatar: undefined,
     roles: new Set(["USER"]),
     permissions: new Set((["USER"] satisfies UserRole[]).flatMap((role) => USER_ROLES_PERMISSIONS[role].permissions)),
   },
-  ["adminUserUuid" as UUID]: {
-    userUuid: "adminUserUuid" as UUID,
+  "019c069f-66a2-7000-8a8e-d7dbb8491a72": {
+    userUuid: "019c069f-66a2-7000-8a8e-d7dbb8491a72",
     fullName: "Admin Adminton",
     avatar: undefined,
     email: "admin@example.com",
@@ -20,8 +20,8 @@ export const TEST_USERS: Record<UUID, AuthDetails> = {
       (["ADMIN", "USER"] satisfies UserRole[]).flatMap((role) => USER_ROLES_PERMISSIONS[role].permissions),
     ),
   },
-  ["guestUserUuid" as UUID]: {
-    userUuid: "guestUserUuid" as UUID,
+  "019c06a1-1065-7000-95d9-57f248e49446": {
+    userUuid: "019c06a1-1065-7000-95d9-57f248e49446",
     fullName: "Guest User",
     email: "guest@example.com",
     avatar: undefined,

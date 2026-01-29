@@ -1,15 +1,15 @@
 import type { BunRequest } from "bun";
-import { NotFoundError, UnauthorizedError } from "../errors";
-import type { AuthDetails, AuthenticatedRequestHandler } from "../security/withAuthentication";
-import { badRequestResponse, forbiddenResponse, internalServerErrorResponse, notFoundResponse } from "./responses";
 import { ZodError } from "zod";
+import { NotFoundError, UnauthorizedError } from "../errors";
+import type { RequestHandler } from "./logginUtils";
+import { badRequestResponse, forbiddenResponse, internalServerErrorResponse, notFoundResponse } from "./responses";
 
 export const jsonResponseOr404 = <T, TRequest extends BunRequest>(
-  serviceFunction: (req: TRequest, authDetails: AuthDetails) => T | Promise<T | null | undefined>,
-): AuthenticatedRequestHandler<TRequest> => {
-  return async (req: TRequest, authDetails: AuthDetails): Promise<Response> => {
+  serviceFunction: (req: TRequest) => T | Promise<T | null | undefined>,
+): RequestHandler<TRequest> => {
+  return async (req: TRequest): Promise<Response> => {
     try {
-      const result = await serviceFunction(req, authDetails);
+      const result = await serviceFunction(req);
       if (result === null || result === undefined) {
         return notFoundResponse("Not Found");
       }
@@ -21,11 +21,11 @@ export const jsonResponseOr404 = <T, TRequest extends BunRequest>(
 };
 
 export const respondWith204OrError = <TRequest extends BunRequest>(
-  serviceFunction: (req: TRequest, authDetails: AuthDetails) => void | Promise<void>,
-): AuthenticatedRequestHandler<TRequest> => {
-  return async (req: TRequest, authDetails: AuthDetails): Promise<Response> => {
+  serviceFunction: (req: TRequest) => void | Promise<void>,
+): RequestHandler<TRequest> => {
+  return async (req: TRequest): Promise<Response> => {
     try {
-      await serviceFunction(req, authDetails);
+      await serviceFunction(req);
       return new Response(null, { status: 204 });
     } catch (error: unknown) {
       return errorResponse(error);
