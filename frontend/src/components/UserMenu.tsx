@@ -3,17 +3,20 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Moon, Sun, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { signOut } from "supertokens-auth-react/recipe/session";
 import { useNavigate } from "react-router";
 import { useUser } from "@/hooks/useUser.tsx";
+import { useTheme } from "next-themes";
 
 export function UserMenu() {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const logout = async () => {
     await signOut();
     navigate("/login");
@@ -44,6 +47,23 @@ export function UserMenu() {
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Theme</DropdownMenuLabel>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("light")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+          {theme === "light" && <span className="ml-auto">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("dark")}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+          {theme === "dark" && <span className="ml-auto">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("system")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>System</span>
+          {theme === "system" && <span className="ml-auto">✓</span>}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={logout}>

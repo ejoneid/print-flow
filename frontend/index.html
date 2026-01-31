@@ -1,10 +1,21 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" suppressHydrationWarning>
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/public/print_flow_logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Print Flow</title>
+    <script>
+      // Prevent flash of unstyled content (FOUC) for theme
+      try {
+        const theme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const appliedTheme = theme === 'system' || !theme ? systemTheme : theme;
+        if (appliedTheme === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (_e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
