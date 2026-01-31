@@ -9,7 +9,6 @@
     "tsc": "! tsc --noEmit 2>&1 | grep -v 'node_modules/.bun/bun-sqlite-migrations' | grep 'error TS'"
   },
   "dependencies": {
-    "cookie": "1.0.2",
     "supertokens-node": "catalog:",
     "jsonwebtoken": "9.0.2",
     "jwks-rsa": "3.2.0",

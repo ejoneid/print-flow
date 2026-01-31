@@ -6,7 +6,6 @@ import { logger } from "shared/node";
 import type { BunRequest } from "bun";
 import { unauthorizedResponse } from "../utils/responses.ts";
 import { USER_PERMISSIONS, USER_ROLES, type UserPermission, type UserRole } from "shared/browser";
-import cookie from "cookie";
 import { runWithRequestContext } from "./requestContext.ts";
 
 export type AuthDetails = {
@@ -33,11 +32,7 @@ export const withAuthentication = <TRequest extends BunRequest>(
       return unauthorizedResponse(`No test user with uuid ${overrideUserUuid}`);
     }
 
-    // TEMPORARY USING COOKIE LIBRARY WHILE Bun.CookieMap IS BROKEN
-    const cookieHeader = req.headers.get("cookie") || "";
-    const cookies = cookie.parse(cookieHeader);
-
-    const jwt = cookies.sAccessToken;
+    const jwt = req.cookies.get("sAccessToken");
     if (!jwt) return unauthorizedResponse("Missing sAccessToken in cookie");
 
     let error: VerifyErrors | undefined;

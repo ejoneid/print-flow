@@ -13,7 +13,39 @@ import { printQueueItemSchema, type PrintQueueItemBody } from "shared/browser";
 import { clsx } from "clsx";
 import { globalEventEmitter } from "@/utils/eventEmitter.ts";
 
-const materialTypes = ["PLA", "PETG", "ASA", "TPU"];
+const materialTypes = [
+  {
+    name: "Choose material for me",
+    value: "UNSPECIFIED",
+    description: "Let us select the best material for your print based on your requirements.",
+    pricePerKilo: undefined,
+  },
+  {
+    name: "PLA",
+    value: "PLA",
+    description: "Easy to print, biodegradable, good surface finish. Not heat resistant, brittle under stress.",
+    pricePerKilo: "150-350NOK",
+  },
+  {
+    name: "PETG",
+    value: "PETG",
+    description: "Strong, durable, heat resistant, weather resistant. Slightly harder to print, can string.",
+    pricePerKilo: "250-500NOK",
+  },
+  {
+    name: "ASA",
+    value: "ASA",
+    description: "UV resistant, weather resistant, heat resistant, durable. Requires enclosed printer.",
+    pricePerKilo: "400-700NOK",
+  },
+  {
+    name: "TPU",
+    value: "TPU",
+    description: "Flexible, impact resistant, durable, weather resistant. Slow to print",
+    pricePerKilo: "500-1000NOK",
+  },
+];
+
 const materialColors = [
   { name: "Any color", colorClassName: "" },
   { name: "Black", colorClassName: "bg-black" },
@@ -110,16 +142,30 @@ export function PrintRequestForm({ onSubmit, isSubmitting }: PrintRequestFormPro
                       name={`materials.${index}.type`}
                       render={({ field }) => (
                         <FormItem>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
-                              <SelectTrigger className="min-w-40">
-                                <SelectValue placeholder="Material Type" />
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Material Type">
+                                  {field.value && materialTypes.find((t) => t.value === field.value)?.name}
+                                </SelectValue>
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
+                            <SelectContent className="w-96 max-w-[calc(100vw-4rem)]">
                               {materialTypes.map((type) => (
-                                <SelectItem key={type} value={type}>
-                                  {type}
+                                <SelectItem key={type.value} value={type.value} className="max-w-full">
+                                  <div className="flex flex-col gap-1 py-1 max-w-full">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <span className="font-medium">{type.name}</span>
+                                      {type.pricePerKilo && (
+                                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                          {type.pricePerKilo} per kg
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground leading-relaxed whitespace-normal break-words">
+                                      {type.description}
+                                    </p>
+                                  </div>
                                 </SelectItem>
                               ))}
                             </SelectContent>
