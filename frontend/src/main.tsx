@@ -14,6 +14,7 @@ import ThirdParty, { Google } from "supertokens-auth-react/recipe/thirdparty";
 import { ThirdPartyPreBuiltUI } from "supertokens-auth-react/recipe/thirdparty/prebuiltui";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
 import App from "./App.tsx";
+import { ThemeProvider } from "./components/ThemeProvider.tsx";
 import { UserContextProvider } from "./hooks/useUser.tsx";
 import "./index.css";
 import AdminPage from "./pages/Admin.tsx";
@@ -74,24 +75,26 @@ const Application = () => (
   <ConditionalSuperTokensWrapper>
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
-        <BrowserRouter>
-          <Routes>
-            {ConditionalSuperTokensRoutes()}
-            <Route
-              path="/"
-              element={
-                <ConditionalSessionAuth>
-                  <App />
-                </ConditionalSessionAuth>
-              }
-            >
-              <Route index element={<HomePage />} />
-              <Route path="request" element={<RequestPage />} />
-              <Route path="admin" element={<AdminPage />} />
-              <Route path="profile/:userUuid" element={<ProfilePage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Routes>
+              {ConditionalSuperTokensRoutes()}
+              <Route
+                path="/"
+                element={
+                  <ConditionalSessionAuth>
+                    <App />
+                  </ConditionalSessionAuth>
+                }
+              >
+                <Route index element={<HomePage />} />
+                <Route path="request" element={<RequestPage />} />
+                <Route path="admin" element={<AdminPage />} />
+                <Route path="profile/:userUuid" element={<ProfilePage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
       </UserContextProvider>
     </QueryClientProvider>
   </ConditionalSuperTokensWrapper>

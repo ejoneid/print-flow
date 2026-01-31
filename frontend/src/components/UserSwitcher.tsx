@@ -4,13 +4,16 @@ import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
-import { User } from "lucide-react";
+import { Moon, Sun, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useTheme } from "next-themes";
 
 export const USER_UUID_HEADER = "x-print-flow-user-uuid";
 
@@ -33,6 +36,7 @@ export let selectedUser: string = localStorage.getItem(USER_UUID_HEADER) ?? test
 
 export const UserSwitcher = () => {
   const [user, setUser] = useState<string>(selectedUser);
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     localStorage.setItem(USER_UUID_HEADER, user);
@@ -50,7 +54,7 @@ export const UserSwitcher = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>Active user</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={user} onValueChange={setUser}>
@@ -60,6 +64,30 @@ export const UserSwitcher = () => {
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to={`/profile/${user}`} className="cursor-pointer flex w-full">
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">Theme</DropdownMenuLabel>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("light")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Light</span>
+          {theme === "light" && <span className="ml-auto">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("dark")}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Dark</span>
+          {theme === "dark" && <span className="ml-auto">✓</span>}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={() => setTheme("system")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>System</span>
+          {theme === "system" && <span className="ml-auto">✓</span>}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
