@@ -18,6 +18,7 @@ services:
       dockerfile: ./backend/Dockerfile
     volumes:
       - print-flow-backend-sqlite:/usr/src/app/backend/data
+      - /root/docker-volume-backup-bin:/s3-backup:ro
     environment:
       - PORT=80
       - DB_LOCATION=data/print-flow.sqlite
