@@ -7,7 +7,7 @@ import { globalEventEmitter } from "@/utils/eventEmitter.ts";
 export function PrintRequestFormCreate() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: FormValues) => {
-      await kyClient.post("/api/print-queue", {
+      await kyClient.post("/api/prints", {
         body: JSON.stringify(values),
       });
     },

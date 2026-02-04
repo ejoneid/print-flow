@@ -4,7 +4,7 @@ import { kyClient } from "./queryClient";
 export const QUERIES = {
   queue: {
     queryKey: ["queue"],
-    queryFn: () => kyClient("/api/print-queue").json<PrintQueueItem[]>(),
+    queryFn: () => kyClient("/api/prints").json<PrintQueueItem[]>(),
   },
   userPrints: ({ userUuid }: { userUuid: UUID }) => ({
     queryKey: ["my-prints", userUuid],

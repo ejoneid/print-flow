@@ -66,7 +66,7 @@ serve({
         ),
       ),
     },
-    "/api/print-queue": {
+    "/api/prints": {
       GET: withLogging(withAuthentication(getPrintQueue)),
       POST: withLogging(
         withAuthentication(
@@ -77,7 +77,7 @@ serve({
         ),
       ),
     },
-    "/api/print-queue/:uuid/status": {
+    "/api/prints/:uuid/status": {
       PUT: withLogging(
         withAuthentication(
           respondWith204OrError(async (req) => {
