@@ -19,6 +19,8 @@ services:
     volumes:
       - print-flow-backend-sqlite:/usr/src/app/backend/data
       - /root/docker-volume-backup-bin:/s3-backup:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       - PORT=80
       - DB_LOCATION=data/print-flow.sqlite

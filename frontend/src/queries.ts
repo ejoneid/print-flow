@@ -1,4 +1,4 @@
-import type { PrintFlowUser, PrintFlowUserInfo, PrintQueueItem } from "shared/browser";
+import type { PrintFlowUser, PrintFlowUserInfo, PrintQueueItem, PrinterStatus } from "shared/browser";
 import { kyClient } from "./queryClient";
 
 export const QUERIES = {
@@ -21,5 +21,9 @@ export const QUERIES = {
   self: {
     queryKey: ["self"],
     queryFn: () => kyClient("/api/self").json<PrintFlowUser>(),
+  },
+  printerStatus: {
+    queryKey: ["printer-status"],
+    queryFn: () => kyClient("/api/printer/status").json<PrinterStatus>(),
   },
 } as const;
