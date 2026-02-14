@@ -16,6 +16,7 @@ import z from "zod";
 import { PRINT_STATUSES, printQueueItemSchema } from "shared/browser/printQueueItem.ts";
 import { getAuthDetails } from "./src/security/requestContext.ts";
 import { getPrinterStatus } from "./src/printer/printCoreService.ts";
+import { socketHandler } from "./src/printer/socketHandler.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -98,9 +99,21 @@ serve({
         ),
       ),
     },
+    "/api/websocket": (req, server) => {
+      if (server.upgrade(req)) {
+        return; // do not return a Response
+      }
+      return new Response("Upgrade failed", { status: 500 });
+    },
   },
   fetch: (req) => notFoundResponse(`Not found: ${req.url}`),
   error: (error) => internalServerErrorResponse(`Internal Error: ${error.message}`),
+  websocket: {
+    open: (ws) => {
+      ws.send(JSON.stringify({ type: "open", data: "WebSocket connection established" }));
+    },
+    message: socketHandler,
+  },
 });
 
 console.log(`Server started on port ${port}`);

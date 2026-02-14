@@ -1,0 +1,21 @@
+meta {
+  name: printer-ws
+  type: ws
+  seq: 2
+}
+
+ws {
+  url: {{baseUrl}}/api/websocket
+  body: ws
+  auth: inherit
+}
+
+body:ws {
+  name: message 1
+  type: json
+  content: '''
+    {
+      "test": "hei"
+    }
+  '''
+}
