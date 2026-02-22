@@ -16,6 +16,8 @@ import z from "zod";
 import { PRINT_STATUSES, printQueueItemSchema } from "shared/browser/printQueueItem.ts";
 import { getAuthDetails } from "./src/security/requestContext.ts";
 import { getPrinterStatus } from "./src/printer/printCoreService.ts";
+import { s3Service } from "./src/s3/s3Service.ts";
+import { zipToObject } from "radash";
 
 const port = process.env.PORT ?? 3001;
 
@@ -85,6 +87,48 @@ serve({
             const printUuid = z.uuid().parse(req.params.uuid) as UUID;
             const status = z.enum(PRINT_STATUSES).parse((await req.json())?.status);
             await updatePrintStatus(printUuid, status);
+          }),
+        ),
+      ),
+    },
+    "/api/prints/:uuid/files": {
+      GET: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            return await s3Service.getPrintFiles(printUuid);
+          }),
+        ),
+      ),
+      POST: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            const body = await req.json();
+            const fileNames = z.array(z.string()).parse(body.fileNames);
+            return zipToObject(fileNames, (fileName: string) =>
+              s3Service.getUploadUrlForPrintFile(printUuid, fileName),
+            );
+          }),
+        ),
+      ),
+    },
+    "/api/prints/:uuid/files/:fileName": {
+      GET: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            const fileName = z.string().parse(req.params.fileName);
+            return { url: s3Service.getDownloadUrlForPrintFile(printUuid, fileName) };
+          }),
+        ),
+      ),
+      DELETE: withLogging(
+        withAuthentication(
+          respondWith204OrError(async (req) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            const fileName = z.string().parse(req.params.fileName);
+            await s3Service.deletePrintFile(printUuid, fileName);
           }),
         ),
       ),
