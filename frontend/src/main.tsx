@@ -19,6 +19,7 @@ import { UserContextProvider } from "./hooks/useUser.tsx";
 import "./index.css";
 import AdminPage from "./pages/Admin.tsx";
 import { queryClient } from "./queryClient.ts";
+import { PrintPage } from "./pages/Print.tsx";
 
 if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
@@ -91,6 +92,7 @@ const Application = () => (
                 <Route path="request" element={<RequestPage />} />
                 <Route path="admin" element={<AdminPage />} />
                 <Route path="profile/:userUuid" element={<ProfilePage />} />
+                <Route path="prints/:printUuid" element={<PrintPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

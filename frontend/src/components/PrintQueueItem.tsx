@@ -69,7 +69,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
           </Link>
         </Button>
         <Button size="sm" variant="outline" className="w-full sm:w-auto" asChild>
-          <Link to={`/print/${item.uuid}`}>View Details</Link>
+          <Link to={`/prints/${item.uuid}`}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>
