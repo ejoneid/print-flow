@@ -31,3 +31,6 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+
+volumes:
+  print-flow-backend-sqlite:
