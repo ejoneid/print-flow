@@ -15,9 +15,9 @@ import { authDetailsToUser } from "./src/user/mappers.ts";
 import z from "zod";
 import { PRINT_STATUSES, printQueueItemSchema } from "shared/browser/printQueueItem.ts";
 import { getAuthDetails } from "./src/security/requestContext.ts";
-import { getPrinterStatus } from "./src/printer/printCoreService.ts";
 import { s3Service } from "./src/s3/s3Service.ts";
 import { zipToObject } from "radash";
+import { printCoreService } from "./src/printer/printCoreService.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -137,7 +137,7 @@ serve({
       GET: withLogging(
         withAuthentication(
           jsonResponseOr404(async (_req) => {
-            return await getPrinterStatus();
+            return await printCoreService.getPrinterStatus();
           }),
         ),
       ),

@@ -1,0 +1,19 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    volumes:
+      - print-flow-backend-sqlite:/usr/src/app/backend/data
+    environment:
+      - PORT=80
+      - DB_LOCATION=data/print-flow.sqlite
+      - ALLOW_AUTH_OVERRIDE=true
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+
+volumes:
+  print-flow-backend-sqlite:
