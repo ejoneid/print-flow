@@ -2,7 +2,6 @@ import FileManager from "@/components/common/FileManager/FileManager";
 import { QUERIES } from "@/queries";
 import { kyClient } from "@/queryClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import ky from "ky";
 import { useParams } from "react-router";
 
 export function PrintPage() {

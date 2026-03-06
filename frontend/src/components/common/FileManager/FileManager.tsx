@@ -1,7 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { url } from "inspector";
 import { useState } from "react";
-import { getEntries, type PrintFlowS3File } from "shared/browser";
+import type { PrintFlowS3File } from "shared/browser";
 import { ActiveUploads, type UploadItem } from "./ActiveUploads";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import { FailedUploads } from "./FailedUploads";

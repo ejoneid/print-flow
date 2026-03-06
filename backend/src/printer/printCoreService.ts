@@ -1,22 +1,16 @@
-import ky from "ky";
+import type { PrinterStatusEnum } from "shared/browser";
+import { PrintCoreServiceImpl } from "./printCoreServiceImpl";
+import { PrintCoreServiceMock } from "./printCoreServiceMock";
 
-export async function getPrinterStatus(): Promise<PrinterStatus> {
-  const status = await ky.get<PrinterStatus>(`${process.env.PRINT_CORE_HOST}/printer/status`);
-  return await status.json();
+export interface PrintCoreService {
+  getPrinterStatus: () => Promise<PrinterStatus>;
 }
 
-type PrinterStatus = {
+export const printCoreService: PrintCoreService =
+  process.env.USE_MOCK_PRINT_CORE === "true" ? new PrintCoreServiceMock() : new PrintCoreServiceImpl();
+
+export type PrinterStatus = {
   status: PrinterStatusEnum;
   temperature: number;
   wifi: string;
 };
-
-enum PrinterStatusEnum {
-  IDLE = "IDLE",
-  PREPARE = "PREPARE",
-  RUNNING = "RUNNING",
-  PAUSE = "PAUSE",
-  FINISH = "FINISH",
-  FAILED = "FAILED",
-  UNKNOWN = "UNKNOWN",
-}
