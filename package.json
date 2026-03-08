@@ -20,7 +20,7 @@
     "tsc": "bun run --filter '*' tsc",
     "format": "biome format --write",
     "lint": "biome lint",
-    "lint:fix": "biome lint --write",
+    "check:fix": "biome check --write",
     "prepare": "husky || exit 0"
   },
   "devDependencies": {

@@ -1,18 +1,18 @@
 import cors from "cors";
 import express from "express";
 import onFinished from "on-finished";
+import { logger } from "shared/node";
 import supertokens, { getUser, type RecipeUserId, type User } from "supertokens-node";
 import { errorHandler, middleware } from "supertokens-node/framework/express";
+import type { SessionContainerInterface } from "supertokens-node/lib/build/recipe/session/types";
+import type { UserContext } from "supertokens-node/lib/build/types";
 import Dashboard from "supertokens-node/recipe/dashboard";
 import EmailPassword from "supertokens-node/recipe/emailpassword";
 import Session from "supertokens-node/recipe/session";
 import ThirdParty from "supertokens-node/recipe/thirdparty";
-import UserRoles from "supertokens-node/recipe/userroles";
 import UserMetadata, { getUserMetadata } from "supertokens-node/recipe/usermetadata";
-import { logger } from "shared/node";
+import UserRoles from "supertokens-node/recipe/userroles";
 import { initUserRoles } from "./src/roles.ts";
-import type { SessionContainerInterface } from "supertokens-node/lib/build/recipe/session/types";
-import type { UserContext } from "supertokens-node/lib/build/types";
 
 const port = process.env.PORT ?? 8000;
 

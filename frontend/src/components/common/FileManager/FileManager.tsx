@@ -1,6 +1,6 @@
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import type { PrintFlowS3File } from "shared/browser";
+import { Separator } from "@/components/ui/separator";
 import { ActiveUploads, type UploadItem } from "./ActiveUploads";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import { FailedUploads } from "./FailedUploads";
@@ -12,7 +12,9 @@ interface FileManagerProps {
   files: PrintFlowS3File[];
   isFetching: boolean;
   onUploadComplete: (file: PrintFlowS3File) => void;
-  deleteUploadByName?: (name: string) => void;
+  onDeleteComplete?: () => void;
+  // biome-ignore lint/suspicious/noExplicitAny: <>
+  deleteUploadByName?: (name: string) => Promise<any>;
   downloadUploadByName?: (name: string) => void;
 }
 
@@ -21,6 +23,7 @@ export default function FileManager({
   files,
   isFetching,
   onUploadComplete,
+  onDeleteComplete,
   deleteUploadByName,
   downloadUploadByName,
 }: FileManagerProps) {
@@ -73,6 +76,12 @@ export default function FileManager({
       setUploads((prev) =>
         prev.map((item) => (item.id === id ? { ...item, progress: 100, status: "completed" } : item)),
       );
+
+      onUploadComplete({
+        name: file.name,
+        size: file.size,
+        lastModified: new Date(file.lastModified).toISOString(),
+      });
     } catch (error) {
       setUploads((prev) =>
         prev.map((item) =>
@@ -100,9 +109,10 @@ export default function FileManager({
     setFileToDelete(fileName);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (fileToDelete && deleteUploadByName) {
-      deleteUploadByName(fileToDelete);
+      await deleteUploadByName(fileToDelete);
+      onDeleteComplete?.();
     }
     setFileToDelete(null);
   };

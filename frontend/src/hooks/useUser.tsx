@@ -1,8 +1,8 @@
-import { LoadingScreen } from "@/components/LoadingScreen.tsx";
-import { QUERIES } from "@/queries.ts";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, type ReactElement, useContext } from "react";
 import { type PrintFlowUser, USER_PERMISSIONS, type UserPermission } from "shared/browser";
+import { LoadingScreen } from "@/components/LoadingScreen.tsx";
+import { QUERIES } from "@/queries.ts";
 
 const EMPTY_USER: PrintFlowUser = {
   userUuid: "" as UUID,

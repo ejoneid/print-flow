@@ -1,5 +1,5 @@
 import type { PrintQueueItem, PrintQueueItemBody, PrintQueueItemDto, PrintStatus } from "shared/browser";
-import { MATERIAL_COLUMNS, PRINT_QUEUE_COLUMNS, type MaterialEntity, type PrintQueueEntity } from "../db.ts";
+import { MATERIAL_COLUMNS, type MaterialEntity, PRINT_QUEUE_COLUMNS, type PrintQueueEntity } from "../db.ts";
 import { NotFoundError, UnauthorizedError } from "../errors.ts";
 import { getAuthDetails } from "../security/requestContext.ts";
 import { userService } from "../user/userService.ts";
@@ -10,6 +10,7 @@ import {
   approvePrintStatement,
   insertTransaction,
   selectPrintByUuid as selectPrintByUuidStatement,
+  selectPrintQueueItemByUuid,
   selectPrintQueueStatement,
   selectUserPrintQueueStatement,
 } from "./printQueueRepository.ts";
@@ -23,6 +24,17 @@ export async function getPrintQueue(): Promise<Response> {
   const entities = selectPrintQueueStatement.all(null);
   const result = await entitiesToPrintQueueItemDtos(entities);
   return Response.json(result satisfies PrintQueueItemDto[]);
+}
+
+export async function getPrintQueueItem(uuid: UUID): Promise<PrintQueueItemDto | null> {
+  const authDetails = getAuthDetails();
+  if (!authDetails.permissions.has("read_queue")) {
+    throw new UnauthorizedError("User does not have permission to read print queue");
+  }
+
+  const entity = selectPrintQueueItemByUuid.get(uuid);
+  if (!entity) return null;
+  return (await entitiesToPrintQueueItemDtos([entity]))[0];
 }
 
 export async function getPrintsForUser(userUuid: UUID): Promise<PrintQueueItemDto[]> {

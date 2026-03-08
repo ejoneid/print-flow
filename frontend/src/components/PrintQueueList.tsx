@@ -1,6 +1,6 @@
+import type { PrintQueueItem } from "shared/browser";
 import { PrintQueueItem as PrintQueueItemComponent } from "@/components/PrintQueueItem.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
-import type { PrintQueueItem } from "shared/browser";
 
 type PrintQueueListProps = {
   printQueue: PrintQueueItem[];

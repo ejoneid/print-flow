@@ -1,14 +1,14 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { PrintQueueItem } from "@/components/PrintQueueItem";
-import { QUERIES } from "@/queries";
 import { useQuery } from "@tanstack/react-query";
 import { Mail, Package, User } from "lucide-react";
 import { Link, useParams } from "react-router";
 import type { PrintFlowUserInfo, PrintQueueItem as PrintQueueItemType } from "shared/browser";
 import { z } from "zod";
+import { PrintQueueItem } from "@/components/PrintQueueItem";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { QUERIES } from "@/queries";
 
 export function ProfilePage() {
   const params = useParams();

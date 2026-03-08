@@ -1,6 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { PrintQueueList } from "@/components/PrintQueueList.tsx";
 import { QUERIES } from "@/queries";
-import { useQuery } from "@tanstack/react-query";
 
 export function AllPrintsView() {
   const { data, isLoading } = useQuery(QUERIES.queue);

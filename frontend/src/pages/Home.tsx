@@ -1,8 +1,8 @@
+import { Link } from "react-router-dom";
 import { AllPrintsView } from "@/components/AllPrintsView.tsx";
 import { MyPrintsView } from "@/components/MyPrintsView.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useUser } from "@/hooks/useUser.tsx";
-import { Link } from "react-router-dom";
 
 export function HomePage() {
   const { roles, permissions } = useUser();

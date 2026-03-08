@@ -1,11 +1,11 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { useUserPermissions } from "@/hooks/useUser";
 import paceholderImage from "@public/480x380.svg";
 import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { PrintQueueItem as PrintQueueItemType } from "shared/browser";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { useUserPermissions } from "@/hooks/useUser";
 import { PrintStatusBadge } from "./PrintStatusBadge";
 
 type PrintQueueItemProps = {
@@ -23,7 +23,7 @@ export function PrintQueueItem({ item }: PrintQueueItemProps) {
             <h3 className="font-semibold text-lg">{item.name}</h3>
             <p className="text-sm text-muted-foreground">Requested by: {item.requester}</p>
           </div>
-          <PrintStatusBadge printUuid={item.uuid} status={item.status} isAdmin={permissions.approve_print} />
+          <PrintStatusBadge printUuid={item.uuid} status={item.status} enableEditing={permissions.approve_print} />
         </div>
       </CardHeader>
       <CardContent className="pb-2">

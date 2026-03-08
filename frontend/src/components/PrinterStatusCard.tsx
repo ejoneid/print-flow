@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Printer, Thermometer, Wifi } from "lucide-react";
 import type { PrinterStatus } from "shared/browser";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PrinterStatusCardProps {
   status: PrinterStatus;

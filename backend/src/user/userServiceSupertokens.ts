@@ -1,14 +1,14 @@
 import type { PrintFlowUserInfo, UpdateableUserField, UserMetaData, UserRole, UserUpdate } from "shared/browser";
+import { getKeys } from "shared/browser/objectUtils";
 import { logger } from "shared/node";
 import { getUser, getUsersNewestFirst } from "supertokens-node";
 import { getUserMetadata } from "supertokens-node/recipe/usermetadata";
 import { addRoleToUser, getRolesForUser, removeUserRole } from "supertokens-node/recipe/userroles";
 import { NotFoundError, NotImplementedError, UnauthorizedError } from "../errors";
-import { getKeys } from "shared/browser/objectUtils";
+import { getAuthDetails } from "../security/requestContext";
 import { isUserRoles } from "../utils/typeGuards";
 import { userPermissionService } from "./userPermissionService";
 import type { UserService } from "./userService";
-import { getAuthDetails } from "../security/requestContext";
 
 const TENANT = "public";
 

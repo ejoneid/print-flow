@@ -1,5 +1,5 @@
-import { logger } from "shared/node";
 import type { BunRequest } from "bun";
+import { logger } from "shared/node";
 
 export type RequestHandler<TRequest extends BunRequest> = (req: TRequest) => Response | Promise<Response>;
 

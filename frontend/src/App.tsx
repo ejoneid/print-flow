@@ -1,9 +1,8 @@
 import printFlowLogo from "@public/print_flow_logo.svg";
-import { UserSwitcher } from "./components/UserSwitcher.tsx";
+import { Link, Outlet } from "react-router-dom";
 import { UserMenu } from "@/components/UserMenu.tsx";
-import { Outlet } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner.tsx";
-import { Link } from "react-router-dom";
+import { UserSwitcher } from "./components/UserSwitcher.tsx";
 
 function App() {
   return (

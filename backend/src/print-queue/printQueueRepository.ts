@@ -4,8 +4,8 @@ import {
   columnsToString,
   db,
   MATERIAL_COLUMNS,
-  PRINT_QUEUE_COLUMNS,
   type MaterialEntity,
+  PRINT_QUEUE_COLUMNS,
   type PrintQueueEntity,
 } from "../db";
 
@@ -16,6 +16,11 @@ const SELECT_PRINT_QUEUE_SQL =
 export const selectPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(SELECT_PRINT_QUEUE_SQL);
 export const selectUserPrintQueueStatement = db.query<PrintQueueEntity & MaterialEntity, null>(
   `${SELECT_PRINT_QUEUE_SQL} WHERE pq.created_by = $userUuid` as const,
+);
+
+const SELECT_PRINT_QUEUE_ITEM_SQL = `${SELECT_PRINT_QUEUE_SQL} WHERE pq.uuid = $uuid`;
+export const selectPrintQueueItemByUuid = db.query<PrintQueueEntity & MaterialEntity, UUID>(
+  SELECT_PRINT_QUEUE_ITEM_SQL,
 );
 
 const SELECT_PRINT_SQL = `SELECT ${columnsToString(PRINT_QUEUE_COLUMNS, "p")} FROM print_queue p WHERE uuid = $uuid`;

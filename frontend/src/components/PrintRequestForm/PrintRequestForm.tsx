@@ -1,16 +1,15 @@
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
-import { useForm } from "react-hook-form";
+import { clsx } from "clsx";
 import { Plus, Trash2 } from "lucide-react";
-
+import { useForm } from "react-hook-form";
+import { type PrintQueueItemBody, printQueueItemSchema } from "shared/browser";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent } from "@/components/ui/card.tsx";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
-import { Textarea } from "@/components/ui/textarea.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form.tsx";
-import { printQueueItemSchema, type PrintQueueItemBody } from "shared/browser";
-import { clsx } from "clsx";
+import { Textarea } from "@/components/ui/textarea.tsx";
 import { globalEventEmitter } from "@/utils/eventEmitter.ts";
 
 const materialTypes = [

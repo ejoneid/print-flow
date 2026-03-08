@@ -1,23 +1,24 @@
 import { serve } from "bun";
+import { zipToObject } from "radash";
+import { PRINT_STATUSES, printQueueItemSchema } from "shared/browser/printQueueItem.ts";
+import { type UserUpdate, userUpdateSchema } from "shared/browser/user.ts";
+import z from "zod";
 import {
-  updatePrintStatus,
   getPrintQueue,
+  getPrintQueueItem,
   getPrintsForUser,
   postPrintQueue,
+  updatePrintStatus,
 } from "./src/print-queue/printQueueService.ts";
+import { printCoreService } from "./src/printer/printCoreService.ts";
+import { s3Service } from "./src/s3/s3Service.ts";
+import { getAuthDetails } from "./src/security/requestContext.ts";
 import { withAuthentication } from "./src/security/withAuthentication.ts";
+import { authDetailsToUser } from "./src/user/mappers.ts";
 import { userService } from "./src/user/userService.ts";
-import { jsonResponseOr404, respondWith204OrError } from "./src/utils/responseUtils.ts";
 import { withLogging } from "./src/utils/logginUtils.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
-import { userUpdateSchema, type UserUpdate } from "shared/browser/user.ts";
-import { authDetailsToUser } from "./src/user/mappers.ts";
-import z from "zod";
-import { PRINT_STATUSES, printQueueItemSchema } from "shared/browser/printQueueItem.ts";
-import { getAuthDetails } from "./src/security/requestContext.ts";
-import { s3Service } from "./src/s3/s3Service.ts";
-import { zipToObject } from "radash";
-import { printCoreService } from "./src/printer/printCoreService.ts";
+import { jsonResponseOr404, respondWith204OrError } from "./src/utils/responseUtils.ts";
 
 const port = process.env.PORT ?? 3001;
 
@@ -76,6 +77,16 @@ serve({
           respondWith204OrError(async (req) => {
             const body = printQueueItemSchema.parse(await req.json());
             await postPrintQueue(body);
+          }),
+        ),
+      ),
+    },
+    "/api/prints/:uuid": {
+      GET: withLogging(
+        withAuthentication(
+          jsonResponseOr404(async (req) => {
+            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+            return await getPrintQueueItem(printUuid);
           }),
         ),
       ),

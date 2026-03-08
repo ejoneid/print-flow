@@ -1,6 +1,3 @@
-import { HomePage } from "@/pages/Home.tsx";
-import { ProfilePage } from "@/pages/Profile.tsx";
-import { RequestPage } from "@/pages/Request.tsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
@@ -13,13 +10,16 @@ import Session, { SessionAuth } from "supertokens-auth-react/recipe/session";
 import ThirdParty, { Google } from "supertokens-auth-react/recipe/thirdparty";
 import { ThirdPartyPreBuiltUI } from "supertokens-auth-react/recipe/thirdparty/prebuiltui";
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
+import { HomePage } from "@/pages/Home.tsx";
+import { ProfilePage } from "@/pages/Profile.tsx";
+import { RequestPage } from "@/pages/Request.tsx";
 import App from "./App.tsx";
 import { ThemeProvider } from "./components/ThemeProvider.tsx";
 import { UserContextProvider } from "./hooks/useUser.tsx";
 import "./index.css";
 import AdminPage from "./pages/Admin.tsx";
-import { queryClient } from "./queryClient.ts";
 import { PrintPage } from "./pages/Print.tsx";
+import { queryClient } from "./queryClient.ts";
 
 if (process.env.FRONTEND_OVERRIDE_AUTH !== "true") {
   SuperTokens.init({
