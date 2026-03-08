@@ -1,5 +1,7 @@
+import { Moon, Sun, User } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { queryClient } from "../queryClient.ts";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button.tsx";
 import {
   DropdownMenu,
@@ -11,9 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu.tsx";
-import { Moon, Sun, User } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useTheme } from "next-themes";
+import { queryClient } from "../queryClient.ts";
 
 export const USER_UUID_HEADER = "x-print-flow-user-uuid";
 

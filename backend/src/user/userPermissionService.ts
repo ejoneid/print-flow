@@ -1,7 +1,7 @@
+import { ADMIN_CHANGEABLE_USER_FIELDS, SELF_CHANGEABLE_USER_FIELDS } from "shared/browser";
 import { UnauthorizedError } from "../errors";
 import { getAuthDetails } from "../security/requestContext";
 import type { AuthDetails } from "../security/withAuthentication";
-import { SELF_CHANGEABLE_USER_FIELDS, ADMIN_CHANGEABLE_USER_FIELDS } from "shared/browser";
 
 class UserPermissionService {
   getPermittedFields(userUuid: UUID, authDetails: AuthDetails): (keyof AuthDetails)[] {

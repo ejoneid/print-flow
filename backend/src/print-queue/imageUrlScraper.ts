@@ -1,5 +1,5 @@
-import ky from "ky";
 import * as cheerio from "cheerio";
+import ky from "ky";
 
 const PRINTABLES_GQL_API = "https://api.printables.com/graphql/";
 // const getThingiverseApiUrl = (thingId: string) =>

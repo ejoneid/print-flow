@@ -1,7 +1,7 @@
-import { QUERIES } from "@/queries";
-import { kyClient, queryClient } from "@/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import type { PrintStatus } from "shared/browser";
+import { QUERIES } from "@/queries";
+import { kyClient, queryClient } from "@/queryClient";
 
 export const usePrintStatusMutation = () =>
   useMutation({

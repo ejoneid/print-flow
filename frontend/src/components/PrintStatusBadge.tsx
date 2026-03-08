@@ -1,3 +1,5 @@
+import { CheckCircle, Clock, Printer, XCircle } from "lucide-react";
+import type { PrintStatus } from "shared/browser";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -7,13 +9,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { usePrintStatusMutation } from "@/hooks/useApprovalMutation";
 import { formatPrintStatus } from "@/utils/formatters";
-import { CheckCircle, Clock, Printer, XCircle } from "lucide-react";
-import type { PrintStatus } from "shared/browser";
 
 type PrintStatusBadgeProps = {
   printUuid: UUID;
   status: PrintStatus;
-  isAdmin?: boolean;
+  enableEditing?: boolean;
 };
 
 const statusColors = {
@@ -34,7 +34,7 @@ const statusIcons = {
 
 const allStatuses: PrintStatus[] = ["pending", "approved", "printing", "completed", "rejected"];
 
-export function PrintStatusBadge({ printUuid, status, isAdmin = false }: PrintStatusBadgeProps) {
+export function PrintStatusBadge({ printUuid, status, enableEditing = false }: PrintStatusBadgeProps) {
   const { mutate } = usePrintStatusMutation();
   const handleUpdate = (newStatus: PrintStatus) => {
     mutate({ printUuid, status: newStatus });
@@ -47,7 +47,7 @@ export function PrintStatusBadge({ printUuid, status, isAdmin = false }: PrintSt
     </Badge>
   );
 
-  if (!isAdmin) {
+  if (!enableEditing) {
     return badgeContent;
   }
 

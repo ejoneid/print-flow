@@ -1,3 +1,8 @@
+import { LogOut, Moon, Sun, User } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import { signOut } from "supertokens-auth-react/recipe/session";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,12 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Moon, Sun, User } from "lucide-react";
-import { Link } from "react-router-dom";
-import { signOut } from "supertokens-auth-react/recipe/session";
-import { useNavigate } from "react-router";
 import { useUser } from "@/hooks/useUser.tsx";
-import { useTheme } from "next-themes";
 
 export function UserMenu() {
   const navigate = useNavigate();

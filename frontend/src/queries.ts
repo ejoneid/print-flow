@@ -1,4 +1,4 @@
-import type { PrintFlowS3File, PrintFlowUser, PrintFlowUserInfo, PrintQueueItem, PrinterStatus } from "shared/browser";
+import type { PrinterStatus, PrintFlowS3File, PrintFlowUser, PrintFlowUserInfo, PrintQueueItem } from "shared/browser";
 import { kyClient } from "./queryClient";
 
 export const QUERIES = {
@@ -38,5 +38,9 @@ export const QUERIES = {
   printFiles: ({ printUuid }: { printUuid: UUID }) => ({
     queryKey: ["print-files", printUuid],
     queryFn: () => kyClient(`/api/prints/${printUuid}/files`).json<PrintFlowS3File[]>(),
+  }),
+  print: ({ printUuid }: { printUuid: UUID }) => ({
+    queryKey: ["print", printUuid],
+    queryFn: () => kyClient(`/api/prints/${printUuid}`).json<PrintQueueItem>(),
   }),
 } as const;

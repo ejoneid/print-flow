@@ -1,10 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, Loader2, Printer, Users } from "lucide-react";
+import { Link } from "react-router-dom";
+import { PrinterStatusCard } from "@/components/PrinterStatusCard";
+import { UserTable } from "@/components/UserTable";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserTable } from "@/components/UserTable";
-import { PrinterStatusCard } from "@/components/PrinterStatusCard";
-import { ArrowLeft, Users, Printer, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { QUERIES } from "@/queries";
 
 export default function AdminPage() {

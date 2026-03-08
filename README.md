@@ -4,8 +4,14 @@
     <img height="300" src="frontend/public/print_flow_logo.svg" />
 </p>
 
-### Environments
-Dev: https://print.dev.ejoneid.dev
+## About
+
+Print Flow is a 3D print queue management system that allows users to submit print requests, track their status, and enables administrators to manage the print queue. Built with a modern monorepo architecture using Bun, React 19, and SQLite.
+
+## Environments
+Dev: https://print.dev.ejoneid.dev  
+Demo: https://print.demo.ejoneid.dev (Let's anyone test the full app without logging in. Mock data. Environment is reset every deployment)  
+Prod: https://print.ejoneid.dev
 
 ## ⚠️ Requirements
 

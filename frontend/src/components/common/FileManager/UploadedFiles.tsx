@@ -1,6 +1,6 @@
 import { CheckCircle, Loader2 } from "lucide-react";
 import type { PrintFlowS3File } from "shared/browser";
-import { formatFileSize, formatDate } from "@/utils/formatters";
+import { formatDate, formatFileSize } from "@/utils/formatters";
 import { FileItem } from "./FileItem";
 
 interface UploadedFilesProps {
@@ -15,7 +15,7 @@ export function UploadedFiles({ files, isFetching, onDelete, onDownload }: Uploa
 
   return (
     <div>
-      <h2 className="text-balance text-foreground text-lg flex items-center font-mono font-normal uppercase sm:text-xs mb-4">
+      <h2 className="text-balance text-foreground flex items-center font-mono font-normal uppercase text-xs mb-4">
         {isFetching ? <Loader2 className="size-4 mr-1 animate-spin" /> : <CheckCircle className="mr-1 size-4" />}
         Uploaded Files
       </h2>
