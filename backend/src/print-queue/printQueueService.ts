@@ -104,9 +104,9 @@ async function entitiesToPrintQueueItemDtos(
 ): Promise<PrintQueueItemDto[]> {
   const printQueue = joinPrintQueueAndMaterials(entities);
   const requesterUuids = printQueue.map((item) => item.requester);
-  const requestersMap = await userService.getUserMetaDataByIds(requesterUuids);
+  const requestersMap = await userService.getUsersByIds(requesterUuids);
   return printQueue.map((item) => ({
     ...item,
-    requester: requestersMap.get(item.requester)!.fullName,
+    requester: requestersMap.get(item.requester)!,
   }));
 }

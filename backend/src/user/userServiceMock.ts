@@ -33,6 +33,15 @@ export class UserServiceMock implements UserService {
     return Promise.resolve(userMetaDataMap);
   };
 
+  getUsersByIds = (userUuids: UUID[]): Promise<Map<UUID, PrintFlowUserInfo>> => {
+    const authDetails = getAuthDetails();
+    if (!authDetails.permissions.has("view_users"))
+      throw new UnauthorizedError(`user ${authDetails.userUuid} does not have permission to see all users`);
+
+    const users = userUuids.map((uuid) => [uuid, authDetailsToUserInfo(TEST_USERS[uuid])] as const);
+    return Promise.resolve(new Map(users));
+  };
+
   getUsers = (): Promise<PrintFlowUserInfo[]> => {
     const authDetails = getAuthDetails();
     if (!authDetails.permissions.has("view_users"))

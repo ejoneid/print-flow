@@ -46,13 +46,13 @@ serve({
         return await userService.updateUser(userUuid, update);
       }),
     },
+
     "/api/users/:uuid/prints": {
       GET: jsonResponseOr404(async (req) => {
         const userUuid = z.uuid().parse(req.params.uuid) as UUID;
         return await getPrintsForUser(userUuid);
       }),
     },
-
     "/api/prints": {
       GET: jsonResponseOr404(getPrintQueue),
       POST: respondWith204OrError(async (req) => {

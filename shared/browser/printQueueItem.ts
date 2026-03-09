@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { PrintFlowUserInfo } from "./user";
 
 export const printQueueItemSchema = z.object({
   name: z.string().min(2, {
@@ -43,7 +44,7 @@ export type PrintQueueItem = {
 export type PrintQueueItemDto = {
   uuid: UUID;
   name: string;
-  requester: string;
+  requester: PrintFlowUserInfo;
   modelLink: string;
   materials: Material[];
   status: PrintStatus;
