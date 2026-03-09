@@ -13,10 +13,8 @@ import {
 import { printCoreService } from "./src/printer/printCoreService.ts";
 import { s3Service } from "./src/s3/s3Service.ts";
 import { getAuthDetails } from "./src/security/requestContext.ts";
-import { withAuthentication } from "./src/security/withAuthentication.ts";
 import { authDetailsToUser } from "./src/user/mappers.ts";
 import { userService } from "./src/user/userService.ts";
-import { withLogging } from "./src/utils/logginUtils.ts";
 import { internalServerErrorResponse, notFoundResponse } from "./src/utils/responses.ts";
 import { jsonResponseOr404, respondWith204OrError } from "./src/utils/responseUtils.ts";
 
@@ -29,129 +27,81 @@ serve({
       GET: () => new Response("OK"),
     },
     "/api/self": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(() => {
-            const authDetails = getAuthDetails();
-            return authDetailsToUser(authDetails);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(() => {
+        const authDetails = getAuthDetails();
+        return authDetailsToUser(authDetails);
+      }),
     },
     "/api/users": {
-      GET: withLogging(withAuthentication(jsonResponseOr404(userService.getUsers))),
+      GET: jsonResponseOr404(userService.getUsers),
     },
     "/api/users/:uuid": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const userUuid = req.params.uuid as UUID;
-            return await userService.getUser(userUuid);
-          }),
-        ),
-      ),
-      PATCH: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const userUuid = req.params.uuid as UUID;
-            const update: UserUpdate = userUpdateSchema.parse(await req.json());
-            return await userService.updateUser(userUuid, update);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (req) => {
+        const userUuid = req.params.uuid as UUID;
+        return await userService.getUser(userUuid);
+      }),
+      PATCH: jsonResponseOr404(async (req) => {
+        const userUuid = req.params.uuid as UUID;
+        const update: UserUpdate = userUpdateSchema.parse(await req.json());
+        return await userService.updateUser(userUuid, update);
+      }),
     },
     "/api/users/:uuid/prints": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const userUuid = z.uuid().parse(req.params.uuid) as UUID;
-            return await getPrintsForUser(userUuid);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (req) => {
+        const userUuid = z.uuid().parse(req.params.uuid) as UUID;
+        return await getPrintsForUser(userUuid);
+      }),
     },
+
     "/api/prints": {
-      GET: withLogging(withAuthentication(getPrintQueue)),
-      POST: withLogging(
-        withAuthentication(
-          respondWith204OrError(async (req) => {
-            const body = printQueueItemSchema.parse(await req.json());
-            await postPrintQueue(body);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(getPrintQueue),
+      POST: respondWith204OrError(async (req) => {
+        const body = printQueueItemSchema.parse(await req.json());
+        await postPrintQueue(body);
+      }),
     },
     "/api/prints/:uuid": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            return await getPrintQueueItem(printUuid);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        return await getPrintQueueItem(printUuid);
+      }),
     },
     "/api/prints/:uuid/status": {
-      PUT: withLogging(
-        withAuthentication(
-          respondWith204OrError(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            const status = z.enum(PRINT_STATUSES).parse((await req.json())?.status);
-            await updatePrintStatus(printUuid, status);
-          }),
-        ),
-      ),
+      PUT: respondWith204OrError(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        const status = z.enum(PRINT_STATUSES).parse((await req.json())?.status);
+        await updatePrintStatus(printUuid, status);
+      }),
     },
     "/api/prints/:uuid/files": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            return await s3Service.getPrintFiles(printUuid);
-          }),
-        ),
-      ),
-      POST: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            const body = await req.json();
-            const fileNames = z.array(z.string()).parse(body.fileNames);
-            return zipToObject(fileNames, (fileName: string) =>
-              s3Service.getUploadUrlForPrintFile(printUuid, fileName),
-            );
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        return await s3Service.getPrintFiles(printUuid);
+      }),
+      POST: jsonResponseOr404(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        const body = await req.json();
+        const fileNames = z.array(z.string()).parse(body.fileNames);
+        return zipToObject(fileNames, (fileName: string) => s3Service.getUploadUrlForPrintFile(printUuid, fileName));
+      }),
     },
     "/api/prints/:uuid/files/:fileName": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            const fileName = z.string().parse(req.params.fileName);
-            return { url: s3Service.getDownloadUrlForPrintFile(printUuid, fileName) };
-          }),
-        ),
-      ),
-      DELETE: withLogging(
-        withAuthentication(
-          respondWith204OrError(async (req) => {
-            const printUuid = z.uuid().parse(req.params.uuid) as UUID;
-            const fileName = z.string().parse(req.params.fileName);
-            await s3Service.deletePrintFile(printUuid, fileName);
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        const fileName = z.string().parse(req.params.fileName);
+        return { url: s3Service.getDownloadUrlForPrintFile(printUuid, fileName) };
+      }),
+      DELETE: respondWith204OrError(async (req) => {
+        const printUuid = z.uuid().parse(req.params.uuid) as UUID;
+        const fileName = z.string().parse(req.params.fileName);
+        await s3Service.deletePrintFile(printUuid, fileName);
+      }),
     },
+
     "/api/printer/status": {
-      GET: withLogging(
-        withAuthentication(
-          jsonResponseOr404(async (_req) => {
-            return await printCoreService.getPrinterStatus();
-          }),
-        ),
-      ),
+      GET: jsonResponseOr404(async (_req) => {
+        return await printCoreService.getPrinterStatus();
+      }),
     },
   },
   fetch: (req) => notFoundResponse(`Not found: ${req.url}`),

@@ -3,7 +3,6 @@ import { MATERIAL_COLUMNS, type MaterialEntity, PRINT_QUEUE_COLUMNS, type PrintQ
 import { NotFoundError, UnauthorizedError } from "../errors.ts";
 import { getAuthDetails } from "../security/requestContext.ts";
 import { userService } from "../user/userService.ts";
-import { forbiddenResponse } from "../utils/responses.ts";
 import { extractType } from "../utils/typeUtils.ts";
 import { getImageUrl } from "./imageUrlScraper.ts";
 import {
@@ -15,15 +14,14 @@ import {
   selectUserPrintQueueStatement,
 } from "./printQueueRepository.ts";
 
-export async function getPrintQueue(): Promise<Response> {
+export async function getPrintQueue(): Promise<PrintQueueItemDto[]> {
   const authDetails = getAuthDetails();
   if (!authDetails.permissions.has("read_queue")) {
-    return forbiddenResponse("User does not have permission to read print queue");
+    throw new UnauthorizedError("User does not have permission to read print queue");
   }
 
   const entities = selectPrintQueueStatement.all(null);
-  const result = await entitiesToPrintQueueItemDtos(entities);
-  return Response.json(result satisfies PrintQueueItemDto[]);
+  return await entitiesToPrintQueueItemDtos(entities);
 }
 
 export async function getPrintQueueItem(uuid: UUID): Promise<PrintQueueItemDto | null> {
