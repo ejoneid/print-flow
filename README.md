@@ -13,6 +13,52 @@ Dev: https://print.dev.ejoneid.dev
 Demo: https://print.demo.ejoneid.dev (Let's anyone test the full app without logging in. Mock data. Environment is reset every deployment)  
 Prod: https://print.ejoneid.dev
 
+## Architecture
+
+```mermaid
+graph LR
+    subgraph Client["Browser"]
+        FE["Frontend"]
+    end
+
+    subgraph Services["Backend Services"]
+        BE["Backend API"]
+        AUTH["Auth Service"]
+        ST["SuperTokens Core"]
+    end
+
+    subgraph External["External Services"]
+        GOOGLE["Google OAuth"]
+        PRINTABLES["Printables"]
+        MAKERWORLD["MakerWorld"]
+    end
+
+    subgraph Storage["Storage"]
+        DB[("SQLite")]
+        S3[("S3")]
+    end
+
+    subgraph HomeNetwork["Home Network (isolated)"]
+        PRINTER["PrintCore API"]
+        BAMBU["Bambulabs P1S"]
+    end
+
+    FE -- "/api/*" --> BE
+    FE -- "/auth/*" --> AUTH
+
+    BE -- "validate JWT" --> ST
+    BE --> DB
+    BE -- "presigned URLs" --> S3
+    PRINTER -- "SSH tunnel" --> BE
+    BE -- "scrape model images" --> PRINTABLES
+    BE -- "scrape model images" --> MAKERWORLD
+
+    AUTH --> ST
+    AUTH --> GOOGLE
+
+    PRINTER -- "status / start print" --> BAMBU
+```
+
 ## ⚠️ Requirements
 
 - [Bun](https://bun.sh/) (v1.3.0 or higher)
