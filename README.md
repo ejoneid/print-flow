@@ -39,7 +39,7 @@ graph LR
     end
 
     subgraph HomeNetwork["Home Network (isolated)"]
-        PRINTER["PrintCore API"]
+        PrintCore["PrintCore API"]
         BAMBU["Bambulabs P1S"]
     end
 
@@ -48,15 +48,16 @@ graph LR
 
     BE -- "validate JWT" --> ST
     BE --> DB
-    BE -- "presigned URLs" --> S3
-    PRINTER -- "SSH tunnel" --> BE
+    BE --> S3
+    FE -- "presigned URLs" --> S3
+    PrintCore -- "REST over SSH tunnel" --> BE
     BE -- "scrape model images" --> PRINTABLES
     BE -- "scrape model images" --> MAKERWORLD
 
     AUTH --> ST
     AUTH --> GOOGLE
 
-    PRINTER -- "status / start print" --> BAMBU
+    PrintCore -- "MQTT" --> BAMBU
 ```
 
 ## ⚠️ Requirements
