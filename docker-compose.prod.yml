@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./auth/Dockerfile
+    networks:
+      - dokploy-network
     environment:
       - PORT=80
       - SUPERTOKENS_CONNECTION_URI=${SUPERTOKENS_CONNECTION_URI}
@@ -18,9 +20,12 @@ services:
       dockerfile: ./backend/Dockerfile
     volumes:
       - print-flow-backend-sqlite:/usr/src/app/backend/data
-      - /root/docker-volume-backup-bin:/s3-backup:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - dokploy-network
+    env_file:
+      - path: .env
     environment:
       - PORT=80
       - DB_LOCATION=data/print-flow.sqlite
@@ -31,6 +36,10 @@ services:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+
+networks:
+  dokploy-network:
+    external: true
 
 volumes:
   print-flow-backend-sqlite:
