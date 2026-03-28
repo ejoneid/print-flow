@@ -1,5 +1,6 @@
 import * as cheerio from "cheerio";
 import ky from "ky";
+import { logger } from "shared/node";
 
 const PRINTABLES_GQL_API = "https://api.printables.com/graphql/";
 // const getThingiverseApiUrl = (thingId: string) =>
@@ -8,13 +9,24 @@ const PRINTABLES_GQL_API = "https://api.printables.com/graphql/";
 export async function getImageUrl(link: string): Promise<string | null> {
   const domain = new URL(link);
   const site = domain.hostname.replace("www.", "");
+  const scraperFunction = resolveScraperFunction(site);
+  if (!scraperFunction) return null;
+  try {
+    return scraperFunction(link);
+  } catch {
+    logger.error(`Unable to get image url from link: ${link}`);
+    return null;
+  }
+}
+
+function resolveScraperFunction(site: string) {
   switch (site) {
     case "makerworld.com":
-      return getMakerWorldImageUrl(link);
+      return getMakerWorldImageUrl;
     case "printables.com":
-      return getPrintablesImageUrl(link);
+      return getPrintablesImageUrl;
     // case "thingiverse.com":
-    //   return getThingiverseImageUrl(link);
+    //   return getThingiverseImageUrl;
     default:
       return null;
   }
