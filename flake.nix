@@ -38,7 +38,6 @@
         };
 
         bun = pkgs.bun;
-        claude-code = pkgs.claude-code;
       in
       {
         devShells = rec {
@@ -47,7 +46,6 @@
             name = "site";
             packages = [
               bun
-              claude-code
             ];
             devshell.startup.link.text = ''
               mkdir -p "$PRJ_DATA_DIR/current"
@@ -56,7 +54,6 @@
             devshell.startup.version_info.text = ''
               echo "---Print flow development environment---"
               echo "bun: $(${bun}/bin/bun --version)"
-              echo "claude: $(${claude-code}/bin/claude --version)"
               echo "----------------------------------------"
             '';
           };
