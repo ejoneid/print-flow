@@ -7,7 +7,8 @@
     "dev": "bun dev-server.ts",
     "dev:auth": "FRONTEND_OVERRIDE_AUTH=false bun dev",
     "tsc": "tsc --noEmit",
-    "build": "tsc -b && bun bundle.ts"
+    "build": "tsc -b && bun bundle.ts",
+    "react-doctor": "react-doctor ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -41,10 +42,11 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@types/node": "22.14.0",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.11",
-    "@types/node": "22.14.0",
     "globals": "^15.15.0",
+    "react-doctor": "^0.0.30",
     "typescript": "~5.7.2"
   }
 }

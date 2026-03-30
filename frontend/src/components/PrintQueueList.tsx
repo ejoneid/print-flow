@@ -34,8 +34,8 @@ export function PrintQueueList({ printQueue, isLoading, header }: PrintQueueList
 function LoadingState() {
   return (
     <div className="grid gap-4">
-      {[1, 2, 3].map((i) => (
-        <Card key={i} className="animate-pulse">
+      {[1, 2, 3].map((n) => (
+        <Card key={n} className="animate-pulse">
           <CardContent className="flex items-center gap-4 py-4">
             <div className="h-12 w-12 bg-muted rounded-md" />
             <div className="flex-1 space-y-2">

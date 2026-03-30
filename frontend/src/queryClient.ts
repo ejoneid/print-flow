@@ -13,7 +13,7 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache(),
 });
 
-export const USER_UUID_HEADER = "x-print-flow-user-uuid";
+const USER_UUID_HEADER = "x-print-flow-user-uuid";
 
 export const kyClient = ky.create({
   hooks: {
