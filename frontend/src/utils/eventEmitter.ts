@@ -1,4 +1,4 @@
-export class EventEmitter {
+class EventEmitter {
   events: Record<string, ((data: unknown) => void)[]>;
   constructor() {
     this.events = {};

@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu.tsx";
 import { queryClient } from "../queryClient.ts";
 
-export const USER_UUID_HEADER = "x-print-flow-user-uuid";
+const USER_UUID_HEADER = "x-print-flow-user-uuid";
 
-export const testUsers = {
+const testUsers = {
   default: {
     name: "user",
     uuid: "019c069d-9d9f-7000-afab-bcd09db382bd",
