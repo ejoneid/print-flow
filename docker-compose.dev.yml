@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: ./auth/Dockerfile
     networks:
-      - print-flow-prod-network
+      - print-flow-dev-network
     environment:
       - PORT=80
       - SUPERTOKENS_CONNECTION_URI=${SUPERTOKENS_CONNECTION_URI}
@@ -23,7 +23,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
-      - print-flow-prod-network
+      - print-flow-dev-network
     env_file:
       - path: .env
     environment:
@@ -38,8 +38,8 @@ services:
       dockerfile: ./frontend/Dockerfile
 
 networks:
-  print-flow-prod-network:
-    name: print-flow-prod-network
+  print-flow-dev-network:
+    name: print-flow-dev-network
 
 volumes:
   print-flow-backend-sqlite:
